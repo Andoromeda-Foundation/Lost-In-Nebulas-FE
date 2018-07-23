@@ -6,7 +6,8 @@
         "claim_button": "分红",
         "buy": "购买",
         "sell": "出售",
-        "claim": "收取分红"
+        "claim": "收取分红",
+        "cancel_popup": "取消"
     },
     "user": {
         "register": {
