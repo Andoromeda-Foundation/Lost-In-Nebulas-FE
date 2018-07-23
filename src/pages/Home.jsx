@@ -29,7 +29,9 @@ const buttonStyle = {
 
 
 var user_addr;
-var contract = 'n1rNoRtSYoR3mC2ATC4nXxZaNLYNtCon67o';
+var current_price;
+var current_balance;
+var contract = 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj';
 
 function ClaimEvent(e) {
     var args = []
@@ -45,26 +47,6 @@ function ClaimEvent(e) {
             msg = '您已取消交易！'
         }
         alert(msg)
-    })
-}
-
-
-export function initializeUserInfo() {
-    window.Nasa.user.getAddr()
-        .then((addr) => {
-            user_addr = addr;
-            //alert(addr)
-        })
-        .catch((e) => {
-            alert('Error: ' + e)
-        })
-
-    window.Nasa.contract.set({
-        default: {
-            local: 'n1rNoRtSYoR3mC2ATC4nXxZaNLYNtCon67o',
-            testnet: 'n1rNoRtSYoR3mC2ATC4nXxZaNLYNtCon67o',
-            mainnet: 'n1rNoRtSYoR3mC2ATC4nXxZaNLYNtCon67o',
-        }
     })
 }
 
@@ -157,13 +139,51 @@ class SellPopup extends React.Component {
 }
 
 class Home extends React.Component {
+    initializeUserInfo() {
+        window.Nasa.user.getAddr()
+            .then((addr) => {
+                user_addr = addr
+                //alert(addr)
+            })
+            .catch((e) => {
+                alert('Error: ' + e)
+            })
+
+    
+        window.Nasa.contract.set({
+            default: {
+                local: 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj',
+                testnet: 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj',
+                mainnet: 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj',
+            }
+        })
+    }
+
+    getPrice() {
+        window.Nasa.query(contract, "getPrice", [])
+        .then((price) => {
+            current_price = price
+        })
+        .catch((e) => {
+            alert('Error: ' + e)
+        })
+        window.Nasa.query(contract, "getProfitPool", [])
+        .then((balance) => {
+            current_balance = balance
+        })
+        .catch((e) => {
+            alert('Error: ' + e)
+        })
+    }
+
     constructor() {
         super();
-        initializeUserInfo();
+        this.initializeUserInfo();
         this.state = {
             showPopup: false
         };
     }
+
     toggleBuyPopup() {
         this.setState({
             showBuyPopup: !this.state.showBuyPopup
@@ -178,7 +198,9 @@ class Home extends React.Component {
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                    <div> Current balance </div>
+                    <div> Current balance: {current_balance}</div>
+                    <div> User addr: {user_addr} </div>
+                    <div> Current Price: {current_price} </div>
 
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
                         {intl.get('homepage.buy_button')}
