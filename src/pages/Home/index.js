@@ -1,5 +1,5 @@
 import React from "react"
-import intl from "react-intl-universal";
+// import intl from "react-intl-universal";
 import { Button } from "antd";
 import "./style.css"
 // import config from "../config";
@@ -13,19 +13,20 @@ const bannerStyle = {
     background: `url(${backgroundImg})`, backgroundSize: 'cover'
 }
 
+const fontStyle = {
+    color: "#FFF",
+    opacity: 1, transform: `translate(0px, 0px)`, fontSize: `20px`,
+    lineHeight: `40px`,
+}
 
 export default function Home() {
+    const price = 114.5141919
     return (<div className="index-page" style={{ marginTop: "-64px" }}>
         <div className="banner" style={bannerStyle}>
-            {/* <img src={Brand} alt="Dasdaq" style={{ maxWidth: "24rem" }} >
+            <h1 style={fontStyle}> Help us! </h1>
 
-            </img> */}
-
-            <p style={{
-                opacity: 1, transform: `translate(0px, 0px)`, fontSize: `20px`,
-                lineHeight: `40px`,
-            }}>
-                {intl.get('homepage.welcome')}
+            <p style={fontStyle}>
+                Current: {price} NAS
                 </p>
                 <div className="button-group">
                     <Button className="btn" type="primary">Btn1</Button>
