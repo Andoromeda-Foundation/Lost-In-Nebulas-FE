@@ -7,7 +7,11 @@
         "buy": "购买",
         "sell": "出售",
         "claim": "收取分红",
-        "cancel_popup": "取消"
+        "cancel_popup": "取消",
+        "buy_title": "确认购买",
+        "sell_title": "确认卖出",
+        "wallet_balance": "钱包余额",
+        "current_price": "当前价格"
     },
     "user": {
         "register": {

@@ -1,16 +1,73 @@
 import React from "react";
-import { Button, Input, Select } from "antd";
+import { Button, Input } from "antd";
 import intl from "react-intl-universal";
 import nasa from "nasa.js";
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
+const contract = 'n1pX7aGpPb4crugwLV6EgumTJt9E18bupGy';
 const Nasa = window.Nasa;
+
+var user_addr;
+var current_price;
+var current_balance;
+
+function initializePrice() {
+    var args = []
+    //alert(window.Nasa.env.get())
+    window.Nasa.query(contract, "getPrice", args)
+        .then((price) => {
+            current_price = price
+            alert("Price:" + current_price)
+            setTimeout(() => {
+            }, 5000)
+        })
+        .catch((e) => {
+            let msg = e.message
+            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
+                msg = '您已取消交易！'
+            }
+            alert(msg)
+        })
+    window.Nasa.query(contract, "getProfitPool", args)
+        .then((balance) => {
+            current_balance = balance
+            setTimeout(() => {
+            }, 5000)
+        })
+        .catch((e) => {
+            let msg = e.message
+            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
+                msg = '您已取消交易！'
+            }
+            alert(msg)
+        })
+}
 
 const bannerStyle = {
     padding: `6rem`,
     color: `#fafafa`,
     width: "100%", minHeight: "48rem",
     background: `url(${backgroundImg})`, backgroundSize: 'cover'
+}
+
+const popupStyle = {
+    position: `fixed`,
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
+}
+
+const popupInnerStyle = {
+    position: 'absolute',
+    left: '25%',
+    right: '25%',
+    top: '25%',
+    bottom: '25%',
+    margin: 'auto',
+    background: `white`
 }
 
 const buttonStyle = {
@@ -27,27 +84,21 @@ const buttonStyle = {
 //     letterSpacing: 0
 // }
 
-
-var user_addr;
-var current_price;
-var current_balance;
-var contract = 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj';
-
 function ClaimEvent(e) {
     var args = []
     var option = {}
     window.Nasa.call(contract, "claim", args, option)
-    .then((payId) => {
-        setTimeout(() => {
-        }, 5000)
-    })
-    .catch((e) => {
-        let msg = e.message
-        if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-            msg = '您已取消交易！'
-        }
-        alert(msg)
-    })
+        .then((payId) => {
+            setTimeout(() => {
+            }, 5000)
+        })
+        .catch((e) => {
+            let msg = e.message
+            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
+                msg = '您已取消交易！'
+            }
+            alert(msg)
+        })
 }
 
 class BuyPopup extends React.Component {
@@ -72,8 +123,8 @@ class BuyPopup extends React.Component {
 
     render() {
         return (
-            <div className='popup'>
-                <div className='popup_inner'>
+            <div className='popup' style={popupStyle}>
+                <div className='popup_inner' style={popupInnerStyle}>
                     <h1>{this.props.text}</h1>
                     <p> </p>
                     <Input
@@ -85,7 +136,7 @@ class BuyPopup extends React.Component {
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.BuyEvent}>
                         {intl.get('homepage.buy_button')}
                     </Button>
-                    <Button type="primary" size="large" style={buttonStyle} onClick={this.props.closePopup}>
+                    <Button type="primary" size="large" style={buttonStyle} onClick={this.props.close_popup}>
                         {intl.get('homepage.cancel_popup')}
                     </Button>
                 </div>
@@ -95,7 +146,6 @@ class BuyPopup extends React.Component {
 }
 
 class SellPopup extends React.Component {
-
     SellEvent(e) {
         var args = [document.getElementById("sell_amount").value]
         var option = {}
@@ -116,8 +166,8 @@ class SellPopup extends React.Component {
 
     render() {
         return (
-            <div className='popup'>
-                <div className='popup_inner'>
+            <div className='popup' style={popupStyle}>
+                <div className='popup_inner' style={popupInnerStyle}>
                     <h1>{this.props.text}</h1>
                     <p> </p>
                     <Input
@@ -129,7 +179,7 @@ class SellPopup extends React.Component {
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.SellEvent}>
                         {intl.get('homepage.sell_button')}
                     </Button>
-                    <Button type="primary" size="large" style={buttonStyle} onClick={this.props.closePopup}>
+                    <Button type="primary" size="large" style={buttonStyle} onClick={this.props.close_popup}>
                         {intl.get('homepage.cancel_popup')}
                     </Button>
                 </div>
@@ -149,36 +199,25 @@ class Home extends React.Component {
                 alert('Error: ' + e)
             })
 
-    
+
         window.Nasa.contract.set({
             default: {
-                local: 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj',
-                testnet: 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj',
-                mainnet: 'n1oD3YLFj8S3tnTo2Nau8PpSYs1jpEs6fSj',
+                local: contract,
+                testnet: contract,
+                mainnet: contract,
             }
         })
     }
 
     getPrice() {
-        window.Nasa.query(contract, "getPrice", [])
-        .then((price) => {
-            current_price = price
-        })
-        .catch((e) => {
-            alert('Error: ' + e)
-        })
-        window.Nasa.query(contract, "getProfitPool", [])
-        .then((balance) => {
-            current_balance = balance
-        })
-        .catch((e) => {
-            alert('Error: ' + e)
-        })
+        initializePrice();
     }
 
     constructor() {
         super();
+        window.Nasa.env.set("testnet")
         this.initializeUserInfo();
+        this.getPrice();
         this.state = {
             showPopup: false
         };
@@ -198,9 +237,9 @@ class Home extends React.Component {
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                    <div> Current balance: {current_balance}</div>
-                    <div> User addr: {user_addr} </div>
-                    <div> Current Price: {current_price} </div>
+                    <div> {intl.get("homepage.wallet_balance")}: {current_balance} NAS</div>
+                    <div> {intl.get("homepage.user_addr")}: {user_addr} </div>
+                    <div> {intl.get("homepage.current_price")}: {current_price} </div>
 
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
                         {intl.get('homepage.buy_button')}
@@ -213,15 +252,15 @@ class Home extends React.Component {
                     </Button>
                     {this.state.showBuyPopup ?
                         <BuyPopup
-                            text="intl.get('homepage.buy_title')"
-                            closePopup={this.toggleBuyPopup.bind(this)}
+                            text={intl.get('homepage.buy_title')}
+                            close_popup={this.toggleBuyPopup.bind(this)}
                         />
                         : null
                     }
                     {this.state.showSellPopup ?
                         <SellPopup
-                            text="intl.get('homepage.sell_title')"
-                            closePopup={this.toggleSellPopup.bind(this)}
+                            text={intl.get('homepage.sell_title')}
+                            close_popup={this.toggleSellPopup.bind(this)}
                         />
                         : null
                     }
