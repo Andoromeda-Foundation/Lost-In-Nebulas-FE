@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Input } from "antd";
 import intl from "react-intl-universal";
 import nasa from "nasa.js";
-
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 const contract = 'n1nEHE62HQCpzmgYFfJ9LnP4eHB2E4XPbhp';
 const Nasa = window.Nasa;
@@ -17,6 +16,9 @@ function initializePrice() {
     window.Nasa.query(contract, "getPrice", args)
         .then((price) => {
             current_price = price
+            this.setState({
+                current_price:price
+            })
             alert("Price:" + current_price)
             setTimeout(() => {
             }, 5000)
@@ -188,11 +190,19 @@ class SellPopup extends React.Component {
     }
 }
 
+
 class Home extends React.Component {
+
+    componentDidMount(){
+
+    }
     initializeUserInfo() {
         window.Nasa.user.getAddr()
             .then((addr) => {
                 user_addr = addr
+                this.setState({
+                    user_addr:addr
+                })
                 //alert(addr)
             })
             .catch((e) => {
@@ -210,16 +220,54 @@ class Home extends React.Component {
     }
 
     getPrice() {
-        initializePrice();
+        // initializePrice();
+        var args=[];
+        window.Nasa.query(contract, "getPrice", args)
+            .then((price) => {
+                current_price = price
+                this.setState({
+                    current_price:price
+                })
+                alert("Price:" + current_price)
+                setTimeout(() => {
+                }, 5000)
+            })
+            .catch((e) => {
+                let msg = e.message
+                if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
+                    msg = '您已取消交易！'
+                }
+                alert(msg)
+            })
+
+        window.Nasa.query(contract, "getProfitPool", args)
+            .then((balance) => {
+                current_balance = balance;
+                this.setState({
+                    current_balance: balance
+                })
+                setTimeout(() => {
+                }, 5000)
+            })
+            .catch((e) => {
+                let msg = e.message
+                if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
+                    msg = '您已取消交易！'
+                }
+                alert(msg)
+            })
     }
 
     constructor() {
         super();
         window.Nasa.env.set("testnet")
-        this.initializeUserInfo();
+       this.initializeUserInfo();
         this.getPrice();
         this.state = {
-            showPopup: false
+            showPopup: false,
+            current_balance: null,
+            user_addr: null,
+            current_price: null
         };
     }
 
@@ -237,10 +285,9 @@ class Home extends React.Component {
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                    <div> {intl.get("homepage.wallet_balance")}: {current_balance} NAS</div>
-                    <div> {intl.get("homepage.user_addr")}: {user_addr} </div>
-                    <div> {intl.get("homepage.current_price")}: {current_price} </div>
-
+                    <div> {intl.get("homepage.wallet_balance")}: {this.state.current_balance} NAS</div>
+                    <div> {intl.get("homepage.user_addr")}: {this.state.user_addr} </div>
+                    <div> {intl.get("homepage.current_price")}: {this.state.current_price} </div>
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
                         {intl.get('homepage.buy_button')}
                     </Button>
