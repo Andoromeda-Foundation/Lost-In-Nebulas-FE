@@ -2,21 +2,34 @@ import React from "react";
 import { Button, Input } from "antd";
 import intl from "react-intl-universal";
 import nasa from "nasa.js";
+import { BigNumber } from 'bignumber.js';
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1pX7aGpPb4crugwLV6EgumTJt9E18bupGy';
+const contract = 'n1nEHE62HQCpzmgYFfJ9LnP4eHB2E4XPbhp';
 const Nasa = window.Nasa;
 
 var user_addr;
 var current_price;
 var current_balance;
 
+class NasTool {
+    static fromNasToWei(value) {
+      return new BigNumber('1000000000000000000').times(value);
+    }
+    static fromWeiToNas(value) {
+      if (value instanceof BigNumber) {
+        return value.dividedBy('1000000000000000000');
+      }
+      return new BigNumber(value).dividedBy('1000000000000000000');
+    }
+  }
+
 function initializePrice() {
     var args = []
     //alert(window.Nasa.env.get())
     window.Nasa.query(contract, "getPrice", args)
         .then((price) => {
-            current_price = price
+            current_price = NasTool.fromWeiToNas(price).toString()
             alert("Price:" + current_price)
             setTimeout(() => {
             }, 5000)
@@ -30,7 +43,8 @@ function initializePrice() {
         })
     window.Nasa.query(contract, "getProfitPool", args)
         .then((balance) => {
-            current_balance = balance
+            current_balance = NasTool.fromWeiToNas(balance).toString()
+            alert("Profit: " + current_balance)
             setTimeout(() => {
             }, 5000)
         })
