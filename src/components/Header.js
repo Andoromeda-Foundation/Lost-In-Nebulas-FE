@@ -48,19 +48,9 @@ const HeaderComponent = ({ location, lang, setLanguage, theme, setTheme, crypto,
             name: navbarI18n('home')
         },
         {
-            path: '/market',
+            path: '/faq',
             icon: 'area-chart',
-            name: navbarI18n('market')
-        },
-        {
-            path: '/dapp',
-            icon: 'appstore',
-            name: navbarI18n('app store')
-        },
-        {
-            path: '/account',
-            icon: 'user',
-            name: navbarI18n('my account')
+            name: navbarI18n('faq')
         }
     ]
     const { headerBackgroundColor, otherColor } = smartNavbarColor({ location, theme })

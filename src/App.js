@@ -14,7 +14,7 @@ import locales from "./locale";
 import SimpleMarket from "./components/crypto/SimpleMarketView";
 import VisiableHeader from "./containers/VisiableHeader";
 import PageNotFound from "./pages/PageNotFound";
-import { Market, Home } from "./pages/asyncRenderWrapper";
+import { Market, Home, Faq } from "./pages/asyncRenderWrapper";
 import Dapp from "./pages/Dapp";
 import config from './config'
 import './App.css';
@@ -57,6 +57,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/market" component={Market} />
+                <Route path="/faq" component={Faq} />
 
                 {/* Routes Account Part */}
                 <Route path="/account" >
