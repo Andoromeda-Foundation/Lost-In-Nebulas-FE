@@ -8,44 +8,6 @@ const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 const contract = 'n1nEHE62HQCpzmgYFfJ9LnP4eHB2E4XPbhp';
 const Nasa = window.Nasa;
 
-<<<<<<< HEAD
-var user_addr;
-var current_price;
-var current_balance;
-
-function initializePrice() {
-    var args = []
-    //alert(window.Nasa.env.get())
-    window.Nasa.query(contract, "getPrice", args)
-        .then((price) => {
-            current_price = price
-            this.setState({
-                current_price:price
-            })
-            setTimeout(() => {
-            }, 5000)
-        })
-        .catch((e) => {
-            let msg = e.message
-            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                msg = '您已取消交易！'
-            }
-            alert(msg)
-        })
-    window.Nasa.query(contract, "getProfitPool", args)
-        .then((balance) => {
-            current_balance = balance
-            setTimeout(() => {
-            }, 5000)
-        })
-        .catch((e) => {
-            let msg = e.message
-            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                msg = '您已取消交易！'
-            }
-            alert(msg)
-        })
-=======
 class NasTool {
     static fromNasToWei(value) {
         return new BigNumber('1000000000000000000').times(value);
@@ -56,7 +18,6 @@ class NasTool {
         }
         return new BigNumber(value).dividedBy('1000000000000000000');
     }
->>>>>>> 754397504c506a6f34a8bb3245e0bac10ec009e3
 }
 
 const bannerStyle = {

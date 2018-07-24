@@ -11,7 +11,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import locales from "./locale";
 
 // Pages
-import SimpleMarket from "./components/crypto/SimpleMarketView";
 import VisiableHeader from "./containers/VisiableHeader";
 import PageNotFound from "./pages/PageNotFound";
 import { Home, Faq } from "./pages/asyncRenderWrapper";
@@ -53,8 +52,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/faq" component={Faq} />
-                
-                <Route path="/coin/:symbol/:fiat" component={SimpleMarket} />
+
                 <Route component={PageNotFound} />
               </Switch>
             </div>
