@@ -13,6 +13,7 @@
     "material-ui": "^0.20.1",
     "nasa.js": "^0.1.2",
     "react": "^16.4.1",
+    "react-async": "^2.1.0",
     "react-dom": "^16.4.1",
     "react-intl-universal": "^1.11.4",
     "react-loadable": "^5.4.0",

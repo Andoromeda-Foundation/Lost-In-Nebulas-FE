@@ -20,7 +20,7 @@ const fontStyle = {
 }
 
 export default function Home() {
-    const price = 114.5141919
+  /*  const price = 114.5141919
     return (<div className="index-page" style={{ marginTop: "-64px" }}>
         <div className="banner" style={bannerStyle}>
             <h1 style={fontStyle}> Help us! </h1>
@@ -35,6 +35,6 @@ export default function Home() {
                 </div>
                 
         </div>
-        {/* <img src={logo} alt="给你比心" style={{ maxWidth: "100%" }} /> */}
-    </div>)
+        {/!* <img src={logo} alt="给你比心" style={{ maxWidth: "100%" }} /> *!/}
+    </div>)*/
 }

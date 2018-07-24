@@ -393,6 +393,10 @@ asap@~2.0.3:
   version "2.0.6"
   resolved "http://registry.npm.taobao.org/asap/download/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
 
+ascii-json@~0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/ascii-json/-/ascii-json-0.2.0.tgz#10ddb361fd48f72595309fd10a6ea2e7bf2c9218"
+
 asn1.js@^4.0.0:
   version "4.10.1"
   resolved "http://registry.npm.taobao.org/asn1.js/download/asn1.js-4.10.1.tgz#b9c2bf5805f1e64aadeed6df3a2bfafb5a73f5a0"
@@ -6556,6 +6560,12 @@ react-app-rewired@^1.5.2:
   dependencies:
     cross-spawn "^5.1.0"
     dotenv "^4.0.0"
+
+react-async@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-async/-/react-async-2.1.0.tgz#9daa00beff96856459d28639a3069086adaf9719"
+  dependencies:
+    ascii-json "~0.2.0"
 
 react-dev-utils@^5.0.1:
   version "5.0.1"
