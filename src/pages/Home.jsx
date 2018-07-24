@@ -5,7 +5,7 @@ import nasa from "nasa.js";
 import { BigNumber } from 'bignumber.js';
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1nEHE62HQCpzmgYFfJ9LnP4eHB2E4XPbhp';
+const contract = 'n1s6Sin538wS2tRVjLE84iuNw9nGXqM374t';
 const Nasa = window.Nasa;
 
 class NasTool {
