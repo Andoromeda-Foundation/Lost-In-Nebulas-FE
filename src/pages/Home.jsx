@@ -8,57 +8,16 @@ const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 const contract = 'n1nEHE62HQCpzmgYFfJ9LnP4eHB2E4XPbhp';
 const Nasa = window.Nasa;
 
-var user_addr;
-var current_price;
-var current_balance;
-
 class NasTool {
     static fromNasToWei(value) {
-      return new BigNumber('1000000000000000000').times(value);
+        return new BigNumber('1000000000000000000').times(value);
     }
     static fromWeiToNas(value) {
-      if (value instanceof BigNumber) {
-        return value.dividedBy('1000000000000000000');
-      }
-      return new BigNumber(value).dividedBy('1000000000000000000');
+        if (value instanceof BigNumber) {
+            return value.dividedBy('1000000000000000000');
+        }
+        return new BigNumber(value).dividedBy('1000000000000000000');
     }
-  }
-
-function initializePrice() {
-    var args = []
-    //alert(window.Nasa.env.get())
-    window.Nasa.query(contract, "getPrice", args)
-        .then((price) => {
-
-            current_price = NasTool.fromWeiToNas(price).toString()
-            this.setState({
-                current_price:price
-            })
-            alert("Price:" + current_price)
-            setTimeout(() => {
-            }, 5000)
-        })
-        .catch((e) => {
-            let msg = e.message
-            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                msg = '您已取消交易！'
-            }
-            alert(msg)
-        })
-    window.Nasa.query(contract, "getProfitPool", args)
-        .then((balance) => {
-            current_balance = NasTool.fromWeiToNas(balance).toString()
-            alert("Profit: " + current_balance)
-            setTimeout(() => {
-            }, 5000)
-        })
-        .catch((e) => {
-            let msg = e.message
-            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                msg = '您已取消交易！'
-            }
-            alert(msg)
-        })
 }
 
 const bannerStyle = {
@@ -209,15 +168,14 @@ class SellPopup extends React.Component {
 
 class Home extends React.Component {
 
-    componentDidMount(){
+    componentDidMount() {
 
     }
     initializeUserInfo() {
         window.Nasa.user.getAddr()
             .then((addr) => {
-                user_addr = addr
                 this.setState({
-                    user_addr:addr
+                    user_addr: addr
                 })
                 //alert(addr)
             })
@@ -236,15 +194,13 @@ class Home extends React.Component {
     }
 
     getPrice() {
-        // initializePrice();
-        var args=[];
+        var args = []
+        //alert(window.Nasa.env.get())
         window.Nasa.query(contract, "getPrice", args)
             .then((price) => {
-                current_price = price
                 this.setState({
-                    current_price:price
+                    current_price: NasTool.fromWeiToNas(price).toString()
                 })
-                alert("Price:" + current_price)
                 setTimeout(() => {
                 }, 5000)
             })
@@ -255,12 +211,10 @@ class Home extends React.Component {
                 }
                 alert(msg)
             })
-
         window.Nasa.query(contract, "getProfitPool", args)
             .then((balance) => {
-                current_balance = balance;
                 this.setState({
-                    current_balance: balance
+                    current_balance: NasTool.fromWeiToNas(balance).toString()
                 })
                 setTimeout(() => {
                 }, 5000)
@@ -277,7 +231,7 @@ class Home extends React.Component {
     constructor() {
         super();
         window.Nasa.env.set("testnet")
-       this.initializeUserInfo();
+        this.initializeUserInfo();
         this.getPrice();
         this.state = {
             showPopup: false,
@@ -328,12 +282,12 @@ class Home extends React.Component {
                         : null
                     }
 
-                <div>
-                    游戏背景：支援获得了价值连城的帝国宝物的反抗军安全返回地球！反抗军首领将会把宝藏分给最后支援的人。
+                    <div>
+                        游戏背景：支援获得了价值连城的帝国宝物的反抗军安全返回地球！反抗军首领将会把宝藏分给最后支援的人。
                     </div><div>
-                    游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。 
+                        游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。
                     <div>gas 燃料价格等于: basePrice + k x supply</div>
-                </div>
+                    </div>
                 </div>
             </div>
         );
