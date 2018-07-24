@@ -1,60 +1,82 @@
 import React,{PureComponent} from "react";
-import { Button, Input } from "antd";
 import intl from "react-intl-universal";
 import nasa from "nasa.js";
 import { BigNumber } from 'bignumber.js';
 // import styles from './timing.less';
 import moment from 'moment'
+import { Button, Input, Table } from "antd";
+import getcontract from "../api/contractbackend.js";
+
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 const contract = 'n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi';
 const Nasa = window.Nasa;
 var user_addr;
 var current_price;
 var current_balance;
-function initializePrice() {
-    var args = []
-    //alert(window.Nasa.env.get())
-    window.Nasa.query(contract, "getPrice", args)
-        .then((price) => {
-            current_price = price
-            this.setState({
-                current_price: price
-            })
-            setTimeout(() => {
-            }, 5000)
-        })
-        .catch((e) => {
-            let msg = e.message
-            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                msg = '您已取消交易！'
-            }
-            alert(msg)
-        })
-    window.Nasa.query(contract, "getProfitPool", args)
-        .then((balance) => {
-            current_balance = balance
-            setTimeout(() => {
-            }, 5000)
-        })
-        .catch((e) => {
-            let msg = e.message
-            if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                msg = '您已取消交易！'
-            }
-            alert(msg)
-        })
-}
-class NasTool {
-    static fromNasToWei(value) {
-        return new BigNumber('1000000000000000000').times(value);
-    }
-    static fromWeiToNas(value) {
-        if (value instanceof BigNumber) {
-            return value.dividedBy('1000000000000000000');
-        }
-        return new BigNumber(value).dividedBy('1000000000000000000');
-    }
-}
+
+var BuyList = [
+    {key: "1", player:"猴子", amount:"100", price:"20", time:"2018/7/24 下午10:32:45"},
+]
+
+const columns = [{
+    title: '玩家',
+    dataIndex: 'player',
+    key: 'player',
+  }, {
+    title: '数量',
+    dataIndex: 'amount',
+    key: 'amount',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => parseInt(a.BTC, 10) - parseInt(b.BTC, 10),
+  }, {
+    title: '价格',
+    dataIndex: 'price',
+    key: 'price',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => parseInt(a.ETH, 10) - parseInt(b.ETH, 10),
+  }, {
+    title: '时间',
+    dataIndex: 'time',
+    key: 'time',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => parseInt(a.EOS, 10) - parseInt(b.EOS, 10),
+  }];
+
+// async function initializePrice() {
+//     var args = []
+
+//     //alert(window.Nasa.env.get())
+//     window.Nasa.query(contract, "getPrice", args)
+//         .then((price) => {
+//             current_price = price
+//             this.setState({
+//                 current_price:price
+//             })
+//             alert("Price:" + current_price)
+//             setTimeout(() => {
+//             }, 5000)
+//         })
+//         .catch((e) => {
+//             let msg = e.message
+//             if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
+//                 msg = '您已取消交易！'
+//             }
+//             alert(msg)
+//         })
+//     window.Nasa.query(contract, "getProfitPool", args)
+//         .then((balance) => {
+//             current_balance = balance
+//             setTimeout(() => {
+//             }, 5000)
+//         })
+//         .catch((e) => {
+//             let msg = e.message
+//             if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
+//                 msg = '您已取消交易！'
+//             }
+//             alert(msg)
+//         })
+// }
 
 const bannerStyle = {
     padding: `6rem`,
@@ -322,6 +344,7 @@ class Home extends React.Component {
                 this.setState({
                     current_price: NasTool.fromWeiToNas(price).toString()
                 })
+                // alert("Price:" + current_price)
                 setTimeout(() => {
                 }, 5000)
             })
@@ -349,16 +372,26 @@ class Home extends React.Component {
             })
     }
 
+    async getList(){
+        getcontract(contract).then((buylist) =>{
+            this.setState({
+                BuyList: buylist
+            })
+            console.log(buylist);
+        });
+    }
     constructor() {
         super();
         window.Nasa.env.set("testnet")
         this.initializeUserInfo();
         this.getPrice();
+        this.getList();
         this.state = {
             showPopup: false,
             current_balance: null,
             user_addr: null,
-            current_price: null
+            current_price: null,
+            BuyList: null
         };
     }
 
@@ -409,7 +442,8 @@ class Home extends React.Component {
                     </div><div>
                         游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。
                     <div>gas 燃料价格等于: basePrice + k x supply</div>
-                    </div>
+                </div>
+                <Table dataSource={this.state.BuyList} columns={columns} style={{background: `white`}}/>
                 </div>
             </div>
         );
