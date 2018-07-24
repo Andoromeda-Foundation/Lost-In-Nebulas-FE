@@ -11,6 +11,7 @@
         "buy_title": "确认购买",
         "sell_title": "确认卖出",
         "wallet_balance": "我的余额",
+        "contract_balance": "合约里资金",
         "user_addr": "我的地址",
         "current_price": "当前价格"
     },

@@ -1,7 +1,6 @@
 import Cookie from 'js-cookie';
 import { BigNumber } from 'bignumber.js';
 import request from 'superagent';
-import timeout from 'timeout-then';
 
 export class NasTool {
   static fromNasToWei(value) {
@@ -70,19 +69,7 @@ export const getAnnouncements = async () => {
   return [];
 };
 
-export const getGg = async (id, time = 0) => {
-  if (!isInit) {
-    return timeout((time + 1) * 500).then(() => getGg(id, time + 1));
-  }
 
-  const item = store.find(x => x.id === `${id}`);
-
-  if (item && item.str) {
-    return item.str;
-  }
-
-  return '';
-};
 
 export const setGg = async (id, str) => {
   const response = await request

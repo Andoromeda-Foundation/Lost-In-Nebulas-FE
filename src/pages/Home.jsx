@@ -5,7 +5,7 @@ import nasa from "nasa.js";
 import { BigNumber } from 'bignumber.js';
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1nEHE62HQCpzmgYFfJ9LnP4eHB2E4XPbhp';
+const contract = 'n1s6Sin538wS2tRVjLE84iuNw9nGXqM374t';
 const Nasa = window.Nasa;
 var user_addr;
 var current_price;
@@ -53,7 +53,6 @@ class NasTool {
         }
         return new BigNumber(value).dividedBy('1000000000000000000');
     }
-
 }
 
 const bannerStyle = {
@@ -305,7 +304,7 @@ class Home extends React.Component {
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                    <div> {intl.get("homepage.wallet_balance")}: {this.state.current_balance} NAS</div>
+                    <div> {intl.get("homepage.contract_balance")}: {this.state.current_balance} NAS</div>
                     <div> {intl.get("homepage.user_addr")}: {this.state.user_addr} </div>
                     <div> {intl.get("homepage.current_price")}: {this.state.current_price} </div>
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>

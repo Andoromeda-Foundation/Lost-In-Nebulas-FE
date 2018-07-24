@@ -7,3 +7,8 @@ const defaultSetterAction = (type) => ({type})
 export const setTheme = defaultSetterAction
 
 export const setCrypto = defaultSetterAction
+
+export const login = (addr) => ({
+    type: 'login',
+    data: addr
+})

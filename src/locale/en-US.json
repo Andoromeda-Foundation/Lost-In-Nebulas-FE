@@ -1,6 +1,7 @@
 {
     "homepage": {
-        "welcome": "Welcome to the decentralized future"
+        "welcome": "Welcome to the decentralized future",
+        "contract_balance": "Contract Balance"
     },
     "user": {
         "register": {
