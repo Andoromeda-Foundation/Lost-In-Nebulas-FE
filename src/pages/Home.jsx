@@ -255,7 +255,7 @@ class Home extends React.Component {
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                    <div> {intl.get("homepage.wallet_balance")}: {this.state.current_balance} NAS</div>
+                    <div> {intl.get("homepage.contract_balance")}: {this.state.current_balance} NAS</div>
                     <div> {intl.get("homepage.user_addr")}: {this.state.user_addr} </div>
                     <div> {intl.get("homepage.current_price")}: {this.state.current_price} </div>
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
