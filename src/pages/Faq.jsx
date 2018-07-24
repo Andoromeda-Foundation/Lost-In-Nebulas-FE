@@ -1,6 +1,6 @@
 import React from "react";
-import { Button, Input } from "antd";
-import intl from "react-intl-universal";
+// import { Button, Input } from "antd";
+// import intl from "react-intl-universal";
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 
@@ -12,9 +12,9 @@ const bannerStyle = {
 }
 
 class Faq extends React.Component {
-    constructor() {
-        super();
-    }
+//    constructor() {
+//        super();
+//    }
 
     render() {
         return (

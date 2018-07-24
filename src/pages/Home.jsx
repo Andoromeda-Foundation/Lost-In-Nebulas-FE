@@ -51,6 +51,16 @@ const buttonStyle = {
     margin: "0.5rem"
 }
 
+const headerStyle = {
+    background:'#FFA940',
+    height:'15%',
+    color: '#fff'
+}
+const lableStyle = {
+    marginLeft:"0.5rem",
+    color:"#000",
+    float:"left"
+}
 // const titleStyle = {
 //     opacity: 1, transform: `translate(0px, 0px)`,
 //     fontSize: `68px`,
@@ -102,8 +112,12 @@ class BuyPopup extends React.Component {
         return (
             <div className='popup' style={popupStyle}>
                 <div className='popup_inner' style={popupInnerStyle}>
-                    <h1>{this.props.text}</h1>
-                    <p> </p>
+                    <h1 style={headerStyle}>{this.props.text}</h1>
+                    <div style={lableStyle}>
+                        Gas:
+                    </div>
+                    <Input id="gas" placeholder="Input a amount in gas" maxLength={25}/>
+                    <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
                         id="buy_amount"
