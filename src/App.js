@@ -14,13 +14,9 @@ import locales from "./locale";
 import SimpleMarket from "./components/crypto/SimpleMarketView";
 import VisiableHeader from "./containers/VisiableHeader";
 import PageNotFound from "./pages/PageNotFound";
-import { Market, Home, Faq } from "./pages/asyncRenderWrapper";
-import Dapp from "./pages/Dapp";
+import { Home, Faq } from "./pages/asyncRenderWrapper";
 import config from './config'
 import './App.css';
-import AccountView from "./pages/User";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 
 const { Footer } = Layout;
 
@@ -56,21 +52,9 @@ class App extends Component {
             <div className="router-view" >
               <Switch>
                 <Route exact path="/" component={Home} />
-                <Route path="/market" component={Market} />
                 <Route path="/faq" component={Faq} />
-
-                {/* Routes Account Part */}
-                <Route path="/account" >
-                  <Switch>
-                    <Route path="/account/info" component={AccountView} />
-                    <Route path="/account/login" component={Login} />
-                    <Route path="/account/register" component={Register} />
-                    <Route component={PageNotFound} />
-                  </Switch>
-                </Route>
-
+                
                 <Route path="/coin/:symbol/:fiat" component={SimpleMarket} />
-                <Route path="/dapp" component={Dapp} />
                 <Route component={PageNotFound} />
               </Switch>
             </div>
