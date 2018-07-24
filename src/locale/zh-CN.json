@@ -10,7 +10,8 @@
         "cancel_popup": "取消",
         "buy_title": "确认购买",
         "sell_title": "确认卖出",
-        "wallet_balance": "钱包余额",
+        "wallet_balance": "我的余额",
+        "user_addr": "我的地址",
         "current_price": "当前价格"
     },
     "user": {
