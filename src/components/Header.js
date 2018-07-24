@@ -1,14 +1,22 @@
-import React from "react";
+import React, { Component } from "react";
 import { NavLink } from 'react-router-dom';
 import intl from "react-intl-universal";
-import { Layout, Menu, Icon, Row, Col } from "antd";
-// import BrandLight from "../Brand-Light.svg";
-// import BrandDark from "../Brand-Dark.svg";
+import { Layout, Menu, Icon, Row, Col, Avatar } from "antd";
 import nasa from "nasa.js";
+import { NasTool } from "../api/tool";
+import axios from "axios";
+import blockies from "ethereum-blockies-png";
 import BrandLight from "../Brand-Light1.svg";
 import BrandDark from "../Brand-Dark1.svg";
 const { Header } = Layout;
 const { SubMenu } = Menu
+
+const getBalance = async (address) => {
+    const { data } = await axios.post('https://testnet.nebulas.io/v1/user/accountstate', {
+        address
+    })
+    return data.result.balance
+}
 
 const MenuItem = ({ path, name, icon }) =>
     <Menu.Item key={path}>
@@ -37,78 +45,98 @@ const langList = {
 
 const navbarI18n = (name) => intl.get(`navbar.${name}`)
 
-const HeaderComponent = ({ location, lang, setLanguage, theme, login, setTheme, crypto, setCrypto }) => {
-    const navigationMenus = [
-        {
-            path: '/',
-            icon: 'home',
-            name: navbarI18n('home')
-        },
-        {
-            path: '/faq',
-            icon: 'area-chart',
-            name: navbarI18n('faq')
+class HeaderComponent extends Component {
+    constructor() {
+        super()
+        this.state = {
+            balance: 0
         }
-    ]
-    const { headerBackgroundColor, otherColor } = smartNavbarColor({ location, theme })
-    // headerBackgroundColor = isHomePage === true ?  : headerBackgroundColor 
-    const Brand = theme === 'light' ? BrandDark : BrandLight
-    window.Nasa.user.getAddr()
-            .then((addr) => {
-                login(addr)
-            })
-            .catch((e) => {
-                alert('Error: ' + e)
-            })
-    
-    return (<Header className="header" style={{ background: headerBackgroundColor,padding: 0 }}>
-        <Row style={
-            {
-                background: otherColor,
-            }}>
-            <Col xxl={4} xl={5} lg={3} sm={24} xs={24}>
-                <div className="logo" >
-                    <img src={Brand} alt="Dasdaq Brand"
-                        style={{ maxHeight: '3rem' }}></img>
-                </div>
-            </Col>
-            <Col xxl={20} xl={19} lg={19} sm={24} xs={24}>
-                <Menu
-                    theme={theme}
-                    mode="horizontal"
-                    defaultSelectedKeys={['/']}
-                    selectedKeys={[location.pathname]}
-                    style={
-                        {
-                            lineHeight: '64px',
-                            background: otherColor,
-                            borderBottomColor: otherColor,
-                        }}>
-                    {
-                        navigationMenus.map(MenuItem)
-                    }
+    }
 
-                    <SubMenu
-                        style={{ float: 'right' }}
-                        title={<span> {theme} </span>}>
-                        <Menu.Item onClick={() => setTheme('SWITCH_TO_DARK')}> DARK </Menu.Item>
-                        <Menu.Item onClick={() => setTheme('SWITCH_TO_LIGHT')}> LIGHT </Menu.Item>
-                    </SubMenu>
-                    <SubMenu
-                        style={{ float: 'right' }}
-                        title={<span><Icon type="global" /><span> {langList[lang]} </span></span>}>
-                        <Menu.Item onClick={() => setLanguage('SWITCH_TO_CHINESE')}>中文</Menu.Item>
-                        <Menu.Item onClick={() => setLanguage('SWITCH_TO_ENGLISH')}>English</Menu.Item>
-                        <Menu.Item onClick={() => setLanguage('SWITCH_TO_JAPANESE')}>日本語</Menu.Item>
-                        <Menu.Item onClick={() => setLanguage('SWITCH_TO_KOREAN')}>한국말</Menu.Item>
-                    </SubMenu>
-                    <Menu.Item style={{ float: 'right' }}>
-                        
-            </Menu.Item>
-                </Menu>
-            </Col>
-        </Row>
-    </Header>)
+    async componentDidMount() {
+        const { login } = this.props
+        const addr = await window.Nasa.user.getAddr()
+        login(addr)
+        let balance = await getBalance(addr)
+        balance = NasTool.fromWeiToNas(balance).toFixed(2).toString(10)
+        this.setState({ balance })
+    }
+
+    render() {
+        const { location, lang, setLanguage, theme, setTheme, account } = this.props
+        const { balance } = this.state
+        const navigationMenus = [
+            {
+                path: '/',
+                icon: 'home',
+                name: navbarI18n('home')
+            },
+            {
+                path: '/faq',
+                icon: 'area-chart',
+                name: navbarI18n('faq')
+            }
+        ]
+        const { headerBackgroundColor, otherColor } = smartNavbarColor({ location, theme })
+        // headerBackgroundColor = isHomePage === true ?  : headerBackgroundColor 
+        const Brand = theme === 'light' ? BrandDark : BrandLight
+
+
+        return (<Header className="header" style={{ background: headerBackgroundColor, padding: 0 }}>
+            <Row style={
+                {
+                    background: otherColor,
+                }}>
+                <Col xxl={4} xl={5} lg={3} sm={24} xs={24}>
+                    <div className="logo" >
+                        <img src={Brand} alt="Dasdaq Brand"
+                            style={{ maxHeight: '3rem' }}></img>
+                    </div>
+                </Col>
+                <Col xxl={20} xl={19} lg={19} sm={24} xs={24}>
+                    <Menu
+                        theme={theme}
+                        mode="horizontal"
+                        defaultSelectedKeys={['/']}
+                        selectedKeys={[location.pathname]}
+                        style={
+                            {
+                                lineHeight: '64px',
+                                background: otherColor,
+                                borderBottomColor: otherColor,
+                            }}>
+                        {
+                            navigationMenus.map(MenuItem)
+                        }
+
+
+                        <SubMenu
+                            style={{ float: 'right' }}
+                            title={<span> {theme} </span>}>
+                            <Menu.Item onClick={() => setTheme('SWITCH_TO_DARK')}> DARK </Menu.Item>
+                            <Menu.Item onClick={() => setTheme('SWITCH_TO_LIGHT')}> LIGHT </Menu.Item>
+                        </SubMenu>
+                        <SubMenu
+                            style={{ float: 'right' }}
+                            title={<span><Icon type="global" /><span> {langList[lang]} </span></span>}>
+                            <Menu.Item onClick={() => setLanguage('SWITCH_TO_CHINESE')}>中文</Menu.Item>
+                            <Menu.Item onClick={() => setLanguage('SWITCH_TO_ENGLISH')}>English</Menu.Item>
+                            <Menu.Item onClick={() => setLanguage('SWITCH_TO_JAPANESE')}>日本語</Menu.Item>
+                            <Menu.Item onClick={() => setLanguage('SWITCH_TO_KOREAN')}>한국말</Menu.Item>
+                        </SubMenu>
+                        {
+                            account && <Menu.Item style={{ float: 'right' }}>
+                                <Avatar size="large"
+                                    src={blockies.createDataURL({ seed: account })} />
+                                <span>{ balance } NAS</span>
+                            </Menu.Item>
+                        }
+                    </Menu>
+                </Col>
+            </Row>
+        </Header>)
+    }
 }
+
 
 export default HeaderComponent

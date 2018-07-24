@@ -6,15 +6,15 @@ import Header from '../components/Header'
 
 
 const mapStateToProps = state => {
-  const {lang, theme, crypto} = state
-  return {lang, theme, crypto}
+  const { lang, theme, crypto, account } = state
+  return { lang, theme, crypto, account }
 }
 
 const mapDispatchToProps = dispatch => ({
-    setLanguage: code => dispatch(setLanguage(code)),
-    setTheme: theme => dispatch(setTheme(theme)),
-    setCrypto: code => dispatch(setCrypto(code)),
-    login: addr => dispatch(login(addr)),
+  setLanguage: code => dispatch(setLanguage(code)),
+  setTheme: theme => dispatch(setTheme(theme)),
+  setCrypto: code => dispatch(setCrypto(code)),
+  login: addr => dispatch(login(addr)),
 })
 
 export default withRouter(
