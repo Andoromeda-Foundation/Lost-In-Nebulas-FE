@@ -1,6 +1,18 @@
 {
     "homepage": {
-        "welcome": "未来欢迎您！"
+        "welcome": "未来欢迎您！",
+        "buy_button": "购买",
+        "sell_button": "出售",
+        "claim_button": "分红",
+        "buy": "购买",
+        "sell": "出售",
+        "claim": "收取分红",
+        "cancel_popup": "取消",
+        "buy_title": "确认购买",
+        "sell_title": "确认卖出",
+        "wallet_balance": "我的余额",
+        "user_addr": "我的地址",
+        "current_price": "当前价格"
     },
     "user": {
         "register": {
