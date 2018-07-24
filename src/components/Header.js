@@ -5,6 +5,7 @@ import intl from "react-intl-universal";
 import { Layout, Menu, Icon, Row, Col } from "antd";
 // import BrandLight from "../Brand-Light.svg";
 // import BrandDark from "../Brand-Dark.svg";
+import nasa from "nasa.js";
 import BrandLight from "../Brand-Light1.svg";
 import BrandDark from "../Brand-Dark1.svg";
 const { Header } = Layout;
@@ -40,7 +41,7 @@ const langList = {
 
 const navbarI18n = (name) => intl.get(`navbar.${name}`)
 
-const HeaderComponent = ({ location, lang, setLanguage, theme, setTheme, crypto, setCrypto }) => {
+const HeaderComponent = ({ location, lang, setLanguage, theme, login, setTheme, crypto, setCrypto }) => {
     const navigationMenus = [
         {
             path: '/',
@@ -56,6 +57,14 @@ const HeaderComponent = ({ location, lang, setLanguage, theme, setTheme, crypto,
     const { headerBackgroundColor, otherColor } = smartNavbarColor({ location, theme })
     // headerBackgroundColor = isHomePage === true ?  : headerBackgroundColor 
     const Brand = theme === 'light' ? BrandDark : BrandLight
+    window.Nasa.user.getAddr()
+            .then((addr) => {
+                login(addr)
+            })
+            .catch((e) => {
+                alert('Error: ' + e)
+            })
+    
     return (<Header className="header" style={{ background: headerBackgroundColor,padding: 0 }}>
         <Row style={
             {
