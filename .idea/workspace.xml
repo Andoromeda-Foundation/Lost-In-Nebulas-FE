@@ -741,6 +741,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/pages/Dapp.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4234">
@@ -748,6 +749,8 @@
         </state>
       </provider>
     </entry>
+=======
+>>>>>>> 754397504c506a6f34a8bb3245e0bac10ec009e3
     <entry file="file://$PROJECT_DIR$/src/config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">

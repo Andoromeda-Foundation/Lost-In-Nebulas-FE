@@ -23,8 +23,6 @@
         }
     },
     "navbar": {
-        "market": "Market",
-        "app store": "DApp Store",
         "theme": "Theme",
         "home": "Home",
         "my account": "My Account",

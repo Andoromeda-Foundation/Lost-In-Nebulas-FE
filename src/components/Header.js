@@ -1,4 +1,3 @@
-
 import React from "react";
 import { NavLink } from 'react-router-dom';
 import intl from "react-intl-universal";
@@ -9,9 +8,6 @@ import BrandLight from "../Brand-Light1.svg";
 import BrandDark from "../Brand-Dark1.svg";
 const { Header } = Layout;
 const { SubMenu } = Menu
-
-
-
 
 const MenuItem = ({ path, name, icon }) =>
     <Menu.Item key={path}>
@@ -35,7 +31,7 @@ const langList = {
     "zh-CN": "中文",
     "en-US": "English",
     "ja-JP": "日本語",
-    "ko-KR":"한국말"
+    "ko-KR": "한국말"
 }
 
 const navbarI18n = (name) => intl.get(`navbar.${name}`)
@@ -48,19 +44,9 @@ const HeaderComponent = ({ location, lang, setLanguage, theme, setTheme, crypto,
             name: navbarI18n('home')
         },
         {
-            path: '/market',
+            path: '/faq',
             icon: 'area-chart',
-            name: navbarI18n('market')
-        },
-        {
-            path: '/dapp',
-            icon: 'appstore',
-            name: navbarI18n('app store')
-        },
-        {
-            path: '/account',
-            icon: 'user',
-            name: navbarI18n('my account')
+            name: navbarI18n('faq')
         }
     ]
     const { headerBackgroundColor, otherColor } = smartNavbarColor({ location, theme })
@@ -106,13 +92,6 @@ const HeaderComponent = ({ location, lang, setLanguage, theme, setTheme, crypto,
                         <Menu.Item onClick={() => setLanguage('SWITCH_TO_ENGLISH')}>English</Menu.Item>
                         <Menu.Item onClick={() => setLanguage('SWITCH_TO_JAPANESE')}>日本語</Menu.Item>
                         <Menu.Item onClick={() => setLanguage('SWITCH_TO_KOREAN')}>한국말</Menu.Item>
-                    </SubMenu>
-                    <SubMenu
-                        style={{ float: 'right' }}
-                        title={<span><Icon type="bank" /><span> {navbarI18n('unit')}: {crypto}</span></span>}>
-                        <Menu.Item onClick={() => setCrypto('BTC')}>Bitcoin</Menu.Item>
-                        <Menu.Item onClick={() => setCrypto('ETH')}>Ethereum</Menu.Item>
-                        <Menu.Item onClick={() => setCrypto('EOS')}>EOS</Menu.Item>
                     </SubMenu>
                     <Menu.Item style={{ float: 'right' }}>
                         
