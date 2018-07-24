@@ -311,6 +311,13 @@ class Home extends React.Component {
                         />
                         : null
                     }
+
+                <div>
+                    游戏背景：支援获得了价值连城的帝国宝物的反抗军安全返回地球！反抗军首领将会把宝藏分给最后支援的人。
+                    </div><div>
+                    游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。 
+                    <div>gas 燃料价格等于: basePrice + k x supply</div>
+                </div>
                 </div>
             </div>
         );
