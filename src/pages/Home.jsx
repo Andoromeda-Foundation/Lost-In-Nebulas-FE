@@ -90,6 +90,21 @@ function ClaimEvent(e) {
 }
 
 class BuyPopup extends React.Component {
+    constructor(props){
+        super(props)
+        this.state={
+            gas:null,
+            nas:null,
+            supply:null,
+            basicPrice:'0.000001'
+        }
+        this.gasToNas = this.gasToNas.bind(this);
+        this.nasToGas = this.nasToGas.bind(this);
+    }
+// async componentDidMount(){
+//     const supply = await window.Nasa.query(contract, "totalSupply", [])
+//     this.setState({supply});
+// }
     BuyEvent(e) {
         var args = []
         var option = {
@@ -108,7 +123,14 @@ class BuyPopup extends React.Component {
                 alert(msg)
             })
     }
-
+   gasToNas(e){
+        const nas = this.state.basicPrice*e.target.value;
+       document.getElementById("buy_amount").value = nas;
+   }
+   nasToGas(e){
+       const gas = e.target.value/this.state.basicPrice;
+       document.getElementById("gas").value = gas;
+   }
     render() {
         return (
             <Modal
@@ -123,17 +145,29 @@ class BuyPopup extends React.Component {
                     id="buy_amount"
                     placeholder="Input a amount in NAS"
                     maxLength="25"
+                    onKeyUp={this.nasToGas}
                 />
                 <div style={lableStyle}>
                     Gas:
                     </div>
-                <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
+                <Input id="gas" placeholder="Input a amount in gas" onKeyUp={this.gasToNas} maxLength="25" />
             </Modal>
         );
     }
 }
 
 class SellPopup extends React.Component {
+    constructor(props){
+        super(props)
+        this.state={
+            gas:null,
+            nas:null,
+            supply:null,
+            basicPrice:'0.000001'
+        }
+        this.gasToNas = this.gasToNas.bind(this);
+        this.nasToGas = this.nasToGas.bind(this);
+    }
     SellEvent(e) {
         var args = [document.getElementById("sell_amount").value]
         var option = {}
@@ -151,7 +185,14 @@ class SellPopup extends React.Component {
                 alert(msg)
             })
     }
-
+    gasToNas(e){
+        const nas = this.state.basicPrice*e.target.value;
+        document.getElementById("sell_amount").value = nas;
+    }
+    nasToGas(e){
+        const gas = e.target.value/this.state.basicPrice;
+        document.getElementById("sell_gas").value = gas;
+    }
     render() {
         return (
             <Modal
@@ -166,11 +207,12 @@ class SellPopup extends React.Component {
                         id="sell_amount"
                         placeholder="Input a amount in Token"
                         maxLength="25"
+                        onKeyUp={this.nasToGas}
                     />
                     <div style={lableStyle}>
                         Gas:
                     </div>
-                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
+                    <Input id="sell_gas" onKeyUp={this.gasToNas} placeholder="Input a amount in gas" maxLength="25" />
                 </Modal>
         );
     }
