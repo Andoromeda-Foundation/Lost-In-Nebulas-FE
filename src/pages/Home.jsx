@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import intl from "react-intl-universal";
 import "nasa.js";
-import { BigNumber } from 'bignumber.js';
 // import styles from './timing.less';
 import { NasTool } from "../api/tool";
 import moment from 'moment'
@@ -10,10 +9,6 @@ import getcontract from "../api/contractbackend.js";
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 const contract = 'n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi';
-const Nasa = window.Nasa;
-var user_addr;
-var current_price;
-var current_balance;
 
 var BuyList = [
     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
@@ -311,8 +306,34 @@ class Timing extends PureComponent {
     }
 }
 class Home extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            showPopup: false,
+            current_balance: null,
+            current_price: null,
+            BuyList: null
+        };
 
-    initializeUserInfo() {
+    }
+
+
+
+
+    async fetchPriceAndBalance() {
+        const price = await window.Nasa.query(contract, "getPrice", [])
+        const balance = await window.Nasa.query(contract, "getProfitPool", [])
+        const current_price = NasTool.fromWeiToNas(price).toString()
+        const current_balance = NasTool.fromWeiToNas(balance).toString()
+        return { current_price, current_balance }
+    }
+
+    async getList() {
+        return getcontract(contract)
+    }
+
+    componentWillMount() {
+        window.Nasa.env.set("testnet")
         window.Nasa.contract.set({
             default: {
                 local: contract,
@@ -322,60 +343,10 @@ class Home extends React.Component {
         })
     }
 
-    getPrice() {
-        var args = []
-        //alert(window.Nasa.env.get())
-        window.Nasa.query(contract, "getPrice", args)
-            .then((price) => {
-                this.setState({
-                    current_price: NasTool.fromWeiToNas(price).toString()
-                })
-                // alert("Price:" + current_price)
-                setTimeout(() => {
-                }, 5000)
-            })
-            .catch((e) => {
-                let msg = e.message
-                if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                    msg = '您已取消交易！'
-                }
-                alert(msg)
-            })
-        window.Nasa.query(contract, "getProfitPool", args)
-            .then((balance) => {
-                this.setState({
-                    current_balance: NasTool.fromWeiToNas(balance).toString()
-                })
-                setTimeout(() => {
-                }, 5000)
-            })
-            .catch((e) => {
-                let msg = e.message
-                if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                    msg = '您已取消交易！'
-                }
-                alert(msg)
-            })
-    }
-
-    async getList() {
-        return getcontract(contract)
-    }
-    constructor() {
-        super();
-        window.Nasa.env.set("testnet")
-        this.state = {
-            showPopup: false,
-            current_balance: null,
-            user_addr: null,
-            current_price: null,
-            BuyList: null
-        };
-    }
 
     async componentDidMount() {
-        this.initializeUserInfo();
-        this.getPrice();
+        const { current_price, current_balance } = await this.fetchPriceAndBalance();
+        this.setState({ current_price, current_balance })
         const BuyList = await this.getList();
         this.setState({ BuyList })
     }
