@@ -15,27 +15,6 @@ export class NasTool {
 }
 
 let store = [];
-let isInit = false;
-
-
-export const init = async () => {
-  await request
-    .get('https://api.leancloud.cn/1.1/classes/ad')
-    .set({
-      'X-LC-Id': 'R6A46DH2meySCVNM1uWOoW2M-gzGzoHsz',
-      'X-LC-Key': '8R6rGgpHa0Y9pq8uO53RAPCB',
-    })
-    .type('json')
-    .accept('json')
-    .then((response) => {
-      if (response.body && response.body.results) {
-        store = response.body.results;
-      }
-      isInit = true;
-    });
-};
-
-init().then();
 
 export const getMe = async () => new Promise((resolve) => {
   window.postMessage({
@@ -67,58 +46,6 @@ export const getAnnouncements = async () => {
   }
 
   return [];
-};
-
-
-
-export const setGg = async (id, str) => {
-  const response = await request
-    .get('https://api.leancloud.cn/1.1/classes/ad')
-    .set({
-      'X-LC-Id': 'R6A46DH2meySCVNM1uWOoW2M-gzGzoHsz',
-      'X-LC-Key': '8R6rGgpHa0Y9pq8uO53RAPCB',
-    })
-    .type('json')
-    .accept('json');
-  if (response.body && response.body.results) {
-    store = response.body.results;
-  }
-  const item = store.find(x => x.id === `${id}`);
-
-  if (item) {
-    // update request
-    await request
-      .put(`https://api.leancloud.cn/1.1/classes/ad/${item.objectId}`)
-      .set({
-        'X-LC-Id': 'R6A46DH2meySCVNM1uWOoW2M-gzGzoHsz',
-        'X-LC-Key': '8R6rGgpHa0Y9pq8uO53RAPCB',
-      })
-      .type('json')
-      .accept('json')
-      .send({
-        str,
-      });
-    // update store
-    item.str = str;
-  } else {
-    // create request
-    await request
-      .post('https://api.leancloud.cn/1.1/classes/ad')
-      .set({
-        'X-LC-Id': 'R6A46DH2meySCVNM1uWOoW2M-gzGzoHsz',
-        'X-LC-Key': '8R6rGgpHa0Y9pq8uO53RAPCB',
-      })
-      .type('json')
-      .accept('json')
-      .send({
-        id: `${id}`,
-        str,
-      });
-    // update store
-    await init();
-  }
-
-  return str;
 };
 
 
