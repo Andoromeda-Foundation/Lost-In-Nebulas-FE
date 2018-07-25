@@ -70,7 +70,8 @@ export default (contract) => new Promise((resolve, reject) => {
                         one.player = tx.from.hash;
                         one.price = tx.value / 10**18;
                         one.amount = 1;
-                        one.time = tx.timestamp;
+                        one.timesecond = tx.timestamp / 1000;
+                        one.time = new Date(one.timesecond * 1000).toLocaleString();
                         buylist.unshift(one);
 
                     txArr.push(_tx);

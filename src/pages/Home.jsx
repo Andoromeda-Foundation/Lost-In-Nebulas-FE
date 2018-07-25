@@ -4,8 +4,10 @@ import "nasa.js";
 // import styles from './timing.less';
 import { NasTool } from "../api/tool";
 import moment from 'moment'
-import { Button, Input, Table, Modal } from "antd";
+import { Button, Input, Table, Modal, Avatar } from "antd";
 import getcontract from "../api/contractbackend.js";
+import NasId from "../api/nasid";
+var _ = require('lodash');
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 const contract = 'n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi';
@@ -260,10 +262,39 @@ class Home extends React.Component {
 
     async getList() {
         try{
-            return getcontract(contract)
+            return await getcontract(contract)
         }catch(e){
             return []
         }
+    }
+
+    getnasid(list){
+        var nasidlist = []; //缓存，地址相同即读取此
+        _.each(list,async (one, index) => {
+            await new Promise((resolve, reject) => {
+                _.each(nasidlist, (oneoflist) => {
+                    if(one.player == oneoflist.player){
+                        var buyList = this.state.buyList
+                        buyList[index].nickname = oneoflist.nickname;
+                        buyList[index].avatar = oneoflist.avatar;
+                        this.setState({ buyList })
+                        resolve();
+                    }
+                })
+                NasId(one.player).then(resp => {
+                    let avatar = {}
+                    avatar.player = one.player
+                    avatar.src = resp.avatar
+                    avatar.nickname = resp.nickname
+                    nasidlist.push(avatar)
+                    var buyList = this.state.buyList
+                    buyList[index].nickname = avatar.nickname;
+                    buyList[index].avatar = avatar.src;
+                    this.setState({ buyList })
+                    resolve();
+                })
+            })
+        })
     }
 
     componentWillMount() {
@@ -282,6 +313,7 @@ class Home extends React.Component {
         this.setState({ current_price, current_balance })
         const buyList = await this.getList();
         this.setState({ buyList })
+        this.getnasid(buyList);
     }
 
     toggleBuyPopup() {
@@ -303,10 +335,12 @@ class Home extends React.Component {
             title: intl.get("history.player"),
             dataIndex: 'player',
             key: 'player',
-                // render: (text, record) => (
-                //     <span>
-                //     </span>
-                // ),
+                render: (text, record) => (
+                    <span>
+                        <Avatar size="large" src={record.avatar} />
+                                    <span> {record.nickname} </span>
+                    </span>
+                ),
         }, {
             title: intl.get("history.event"),
             dataIndex: 'event',
@@ -330,8 +364,9 @@ class Home extends React.Component {
             dataIndex: 'time',
             key: 'time',
             defaultSortOrder: 'descend',
-            sorter: (a, b) => parseInt(a.time, 10) - parseInt(b.time, 10),
+            sorter: (a, b) => parseInt(a.timesecond, 10) - parseInt(b.timesecond, 10),
         }];
+
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
