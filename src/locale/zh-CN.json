@@ -18,6 +18,7 @@
     },
     "history": {
         "player": "玩家",
+        "event": "事件",
         "amount": "数量",
         "price": "价格",
         "time": "时间"

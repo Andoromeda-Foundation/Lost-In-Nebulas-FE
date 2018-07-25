@@ -18,6 +18,7 @@
     },
     "history": {
         "player": "player",
+        "event": "event",
         "amount": "amount",
         "price": "price",
         "time": "time"

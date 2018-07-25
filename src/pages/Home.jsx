@@ -259,7 +259,11 @@ class Home extends React.Component {
     }
 
     async getList() {
-        return getcontract(contract)
+        try{
+            return getcontract(contract)
+        }catch(e){
+            return []
+        }
     }
 
     componentWillMount() {
@@ -299,24 +303,34 @@ class Home extends React.Component {
             title: intl.get("history.player"),
             dataIndex: 'player',
             key: 'player',
+                // render: (text, record) => (
+                //     <span>
+                //     </span>
+                // ),
+        }, {
+            title: intl.get("history.event"),
+            dataIndex: 'event',
+            key: 'event',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => a.event.length - b.event.length,
         }, {
             title: intl.get("history.amount"),
             dataIndex: 'amount',
             key: 'amount',
             defaultSortOrder: 'descend',
-            sorter: (a, b) => parseInt(a.BTC, 10) - parseInt(b.BTC, 10),
+            sorter: (a, b) => parseInt(a.amount, 10) - parseInt(b.amount, 10),
         }, {
             title: intl.get("history.price"),
             dataIndex: 'price',
             key: 'price',
             defaultSortOrder: 'descend',
-            sorter: (a, b) => parseInt(a.ETH, 10) - parseInt(b.ETH, 10),
+            sorter: (a, b) => parseInt(a.price, 10) - parseInt(b.price, 10),
         }, {
             title: intl.get("history.time"),
             dataIndex: 'time',
             key: 'time',
             defaultSortOrder: 'descend',
-            sorter: (a, b) => parseInt(a.EOS, 10) - parseInt(b.EOS, 10),
+            sorter: (a, b) => parseInt(a.time, 10) - parseInt(b.time, 10),
         }];
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>

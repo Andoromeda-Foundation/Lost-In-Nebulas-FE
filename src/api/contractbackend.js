@@ -28,23 +28,33 @@ export default (contract) => new Promise((resolve, reject) => {
 
     superagent.get(fetchUrl).end(async (err, res) => {
 
-        var totalPage = res.body.data.totalPage;
-        var txnCnt = res.body.data.txnCnt;
+        var totalPage = 0;
+        var txnCnt = [];
+        try{
+            var totalPage = res.body.data.totalPage;
+            var txnCnt = res.body.data.txnCnt;
+        }catch(e){
+            console.log(e);
+        }
         var buylist = [];
         
         var txArr = [];
         var arr = _.fill(Array(totalPage), 1);
         var index = 0;
-        console.log("合约:", contract, "交易页数:", totalPage, "交易记录:", txnCnt);
+        // console.log("合约:", contract, "交易页数:", totalPage, "交易记录:", txnCnt);
         async.eachSeries(arr, (acc, callback) => {
 
             index++;
             var url = netbegin + `tx?a=${contract}&p=${index}`
-            console.log(url)
+            // console.log(url)
             superagent.get(url).end((err, res) => {
+                // console.log(res.body)
+                var txnList = [];
+                try{
+                    var txnList = res.body.data.txnList;
+                }catch(e){
 
-                var txnList = res.body.data.txnList;
-
+                }
                 _.each(txnList, (tx) => {
                     var _tx = {
                         address: tx.from.hash,
@@ -52,15 +62,16 @@ export default (contract) => new Promise((resolve, reject) => {
                     }
 
                     var func = JSON.parse(tx.data).Function;
-                    console.log(tx);
-                    if (func == "buy") {
-                        var one = {};
+                    
+                    // console.log(tx);
+                    var one = {};
+                        one.key = buylist.length + 1;
+                        one.event = func;
                         one.player = tx.from.hash;
                         one.price = tx.value / 10**18;
                         one.amount = 1;
                         one.time = tx.timestamp;
                         buylist.unshift(one);
-                    }
 
                     txArr.push(_tx);
                 })
@@ -89,7 +100,7 @@ export default (contract) => new Promise((resolve, reject) => {
                 totalNas += tx.balance;
             })
 
-            console.log("合约", contract, "交易页数", totalPage, "交易记录", txArr.length, "去重后地址", arrs.length);
+            // console.log("合约", contract, "交易页数", totalPage, "交易记录", txArr.length, "去重后地址", arrs.length);
             
             resolve(buylist);
 
@@ -184,7 +195,7 @@ function analyzeAccount(acc, cb) {
 
             })
 
-            console.log("账户", account, "余额:", acc.balance, "交易记录", txArr.length, "去重", arrs.length, "totalOut", totalOut, "totalIn", totalIn, "inCount", inCount, "outCount", outCount);
+            // console.log("账户", account, "余额:", acc.balance, "交易记录", txArr.length, "去重", arrs.length, "totalOut", totalOut, "totalIn", totalIn, "inCount", inCount, "outCount", outCount);
 
             cb();
 
@@ -196,7 +207,7 @@ function analyzeAccount(acc, cb) {
 
 function fetchAccountInfo(accounts) {
 
-    console.log("------------调用该合约的所有账户三维--------------")
+    // console.log("------------调用该合约的所有账户三维--------------")
 
     var totalNas = 0;
 
@@ -208,15 +219,15 @@ function fetchAccountInfo(accounts) {
         var fetchUrl = netbegin + `api/address/${acc.address}`
 
         superagent.get(fetchUrl).end((err, res) => {
-            console.log(res.body.data)
+            // console.log(res.body.data)
             var address = res.body.data.address;
             acc.txCnt = res.body.data.txCnt;
 
             try {
                 acc.bls = address.balance / 10 ** 18;
             } catch (e) {
-                console.log("mmm");
-                console.log(res.body);
+                // console.log("mmm");
+                // console.log(res.body);
                 acc.bls = 0;
             }
             totalNas += acc.bls;
@@ -228,8 +239,8 @@ function fetchAccountInfo(accounts) {
         });
 
     }, (err) => {
-        console.log();
-        console.log("合约", contract, "去重后账户地址", accounts.length, "总资金", totalNas);
+        // console.log();
+        // console.log("合约", contract, "去重后账户地址", accounts.length, "总资金", totalNas);
 
     })
 }
