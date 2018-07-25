@@ -9,6 +9,6 @@ export const Faq = Loadable({
 })
 
 export const Home = Loadable({
-  loader: () => import('./Home'),
+  loader: () => import('../containers/Home'),
   loading: () => LoadingMessage('Home')
 });

@@ -1,4 +1,4 @@
-import React,{PureComponent} from "react";
+import React, { PureComponent } from "react";
 import intl from "react-intl-universal";
 import "nasa.js";
 import { BigNumber } from 'bignumber.js';
@@ -16,32 +16,32 @@ var current_price;
 var current_balance;
 
 var BuyList = [
-    {key: "1", player:"猴子", amount:"100", price:"20", time:"2018/7/24 下午10:32:45"},
+    { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
 ]
 
 const columns = [{
     title: '玩家',
     dataIndex: 'player',
     key: 'player',
-  }, {
+}, {
     title: '数量',
     dataIndex: 'amount',
     key: 'amount',
     defaultSortOrder: 'descend',
     sorter: (a, b) => parseInt(a.BTC, 10) - parseInt(b.BTC, 10),
-  }, {
+}, {
     title: '价格',
     dataIndex: 'price',
     key: 'price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => parseInt(a.ETH, 10) - parseInt(b.ETH, 10),
-  }, {
+}, {
     title: '时间',
     dataIndex: 'time',
     key: 'time',
     defaultSortOrder: 'descend',
     sorter: (a, b) => parseInt(a.EOS, 10) - parseInt(b.EOS, 10),
-  }];
+}];
 
 // async function initializePrice() {
 //     var args = []
@@ -111,18 +111,18 @@ const buttonStyle = {
 }
 
 const headerStyle = {
-    background:'#FFA940',
-    height:'15%',
+    background: '#FFA940',
+    height: '15%',
     color: '#fff'
 }
 const lableStyle = {
-    marginLeft:"0.5rem",
-    color:"#000",
-    float:"left"
+    marginLeft: "0.5rem",
+    color: "#000",
+    float: "left"
 }
-const  timingStyle = {
-     color: '#fff',
-     fontSize: '3rem'
+const timingStyle = {
+    color: '#fff',
+    fontSize: '3rem'
 }
 // const titleStyle = {
 //     opacity: 1, transform: `translate(0px, 0px)`,
@@ -179,7 +179,7 @@ class BuyPopup extends React.Component {
                     <div style={lableStyle}>
                         Gas:
                     </div>
-                    <Input id="gas" placeholder="Input a amount in gas" maxLength={25}/>
+                    <Input id="gas" placeholder="Input a amount in gas" maxLength={25} />
                     <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
@@ -226,7 +226,7 @@ class SellPopup extends React.Component {
                     <div style={lableStyle}>
                         Gas:
                     </div>
-                    <Input id="gas" placeholder="Input a amount in gas" maxLength={25}/>
+                    <Input id="gas" placeholder="Input a amount in gas" maxLength={25} />
                     <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
@@ -265,7 +265,7 @@ class Timing extends PureComponent {
                 const now = `${Y}/${M}/${D} ${S}`;
                 const pre = `${Y}/${M}/${D} 23:59:59`;
                 // loss = parseInt((new Date(this.state.endTime) - new Date(now)) / 1000, 10);
-                loss = parseInt((new Date(pre)-new Date(now)) / 1000, 10);
+                loss = parseInt((new Date(pre) - new Date(now)) / 1000, 10);
                 if (loss < 0) {
                     this.setState({
                         day: '0',
@@ -312,22 +312,7 @@ class Timing extends PureComponent {
 }
 class Home extends React.Component {
 
-    componentDidMount() {
-
-    }
     initializeUserInfo() {
-        window.Nasa.user.getAddr()
-            .then((addr) => {
-                this.setState({
-                    user_addr: addr
-                })
-                //alert(addr)
-            })
-            .catch((e) => {
-                alert('Error: ' + e)
-            })
-
-
         window.Nasa.contract.set({
             default: {
                 local: contract,
@@ -373,20 +358,12 @@ class Home extends React.Component {
             })
     }
 
-    async getList(){
-        getcontract(contract).then((buylist) =>{
-            this.setState({
-                BuyList: buylist
-            })
-            console.log(buylist);
-        });
+    async getList() {
+        return getcontract(contract)
     }
     constructor() {
         super();
         window.Nasa.env.set("testnet")
-        this.initializeUserInfo();
-        this.getPrice();
-        this.getList();
         this.state = {
             showPopup: false,
             current_balance: null,
@@ -394,6 +371,13 @@ class Home extends React.Component {
             current_price: null,
             BuyList: null
         };
+    }
+
+    async componentDidMount() {
+        this.initializeUserInfo();
+        this.getPrice();
+        const BuyList = await this.getList();
+        this.setState({ BuyList })
     }
 
     toggleBuyPopup() {
@@ -407,13 +391,14 @@ class Home extends React.Component {
         });
     }
     render() {
+        const { account } = this.props
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
                     <div> {intl.get("homepage.contract_balance")}: {this.state.current_balance} NAS</div>
-                    <div> {intl.get("homepage.user_addr")}: {this.state.user_addr} </div>
+                    <div> {intl.get("homepage.user_addr")}: {account} </div>
                     <div> {intl.get("homepage.current_price")}: {this.state.current_price} </div>
-                    <Timing/>
+                    <Timing />
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
                         {intl.get('homepage.buy_button')}
                     </Button>
@@ -443,8 +428,8 @@ class Home extends React.Component {
                     </div><div>
                         游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。
                     <div>gas 燃料价格等于: basePrice + k x supply</div>
-                </div>
-                <Table dataSource={this.state.BuyList} columns={columns} style={{background: `white`}}/>
+                    </div>
+                    <Table dataSource={this.state.BuyList} columns={columns} style={{ background: `white` }} />
                 </div>
             </div>
         );
