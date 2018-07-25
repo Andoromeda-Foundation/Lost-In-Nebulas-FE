@@ -4,7 +4,7 @@ import "nasa.js";
 // import styles from './timing.less';
 import { NasTool } from "../api/tool";
 import moment from 'moment'
-import { Button, Input, Table } from "antd";
+import { Button, Input, Table, Modal } from "antd";
 import getcontract from "../api/contractbackend.js";
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
@@ -133,28 +133,24 @@ class BuyPopup extends React.Component {
 
     render() {
         return (
-            <div className='popup' style={popupStyle}>
-                <div className='popup_inner' style={popupInnerStyle}>
-                    <h1 style={headerStyle}>{this.props.text}</h1>
-                    <div style={lableStyle}>Nas:</div>
-                    <Input
-                        {...this.props}
-                        id="buy_amount"
-                        placeholder="Input a amount in NAS"
-                        maxLength="25"
-                    />
-                    <div style={lableStyle}>
-                        Gas:
+            <Modal
+                title={this.props.text}
+                visible={this.props.visible}
+                onOk={this.BuyEvent}
+                onCancel={this.props.close_popup}
+            >
+                <div style={lableStyle}>Nas:</div>
+                <Input
+                    {...this.props}
+                    id="buy_amount"
+                    placeholder="Input a amount in NAS"
+                    maxLength="25"
+                />
+                <div style={lableStyle}>
+                    Gas:
                     </div>
-                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
-                    <Button type="primary" size="large" style={buttonStyle} onClick={this.BuyEvent}>
-                        {intl.get('homepage.buy_button')}
-                    </Button>
-                    <Button type="primary" size="large" style={buttonStyle} onClick={this.props.close_popup}>
-                        {intl.get('homepage.cancel_popup')}
-                    </Button>
-                </div>
-            </div >
+                <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
+            </Modal>
         );
     }
 }
@@ -180,9 +176,12 @@ class SellPopup extends React.Component {
 
     render() {
         return (
-            <div className='popup' style={popupStyle}>
-                <div className='popup_inner' style={popupInnerStyle}>
-                    <h1 style={headerStyle}>{this.props.text}</h1>
+            <Modal
+                title={this.props.text}
+                visible={this.props.visible}
+                onOk={this.SellEvent}
+                onCancel={this.props.close_popup}
+            >
                     <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
@@ -194,14 +193,7 @@ class SellPopup extends React.Component {
                         Gas:
                     </div>
                     <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
-                    <Button type="primary" size="large" style={buttonStyle} onClick={this.SellEvent}>
-                        {intl.get('homepage.sell_button')}
-                    </Button>
-                    <Button type="primary" size="large" style={buttonStyle} onClick={this.props.close_popup}>
-                        {intl.get('homepage.cancel_popup')}
-                    </Button>
-                </div>
-            </div>
+                </Modal>
         );
     }
 }
@@ -347,6 +339,7 @@ class Home extends React.Component {
                     {this.state.showBuyPopup ?
                         <BuyPopup
                             text={intl.get('homepage.buy_title')}
+                            visible={this.state.showBuyPopup}
                             close_popup={this.toggleBuyPopup.bind(this)}
                         />
                         : null
@@ -354,6 +347,7 @@ class Home extends React.Component {
                     {this.state.showSellPopup ?
                         <SellPopup
                             text={intl.get('homepage.sell_title')}
+                            visible={this.state.showSellPopup}
                             close_popup={this.toggleSellPopup.bind(this)}
                         />
                         : null
