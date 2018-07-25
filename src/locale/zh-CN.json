@@ -16,32 +16,16 @@
         "current_price": "当前价格",
         "tx_rejected_msg": "您已取消交易"
     },
-    "user": {
-        "register": {
-            "title": "注册新帐号",
-            "email": "邮箱地址",
-            "username": "账号",
-            "password": "密码",
-            "confirm password": "密码在输入",
-            "register": "注册"
-        },
-        "login": {
-            "user login": "会员登入",
-            "remember me": "记住我",
-            "forgot password": "忘记密码",
-            "login": "登入",
-            "register new account": "注册新账号",
-            "or": "or",
-            "username": "账户",
-            "password": "密码"
-        }
+    "history": {
+        "player": "玩家",
+        "amount": "数量",
+        "price": "价格",
+        "time": "时间"
     },
     "navbar": {
         "faq": "常见问题",
-        "app store": "DApp 商店",
         "theme": "主题",
         "home": "首页",
-        "my account": "我的账户",
         "unit": "単位"
     },
     "theme": {

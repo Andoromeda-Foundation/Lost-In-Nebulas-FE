@@ -1,32 +1,31 @@
 {
     "homepage": {
         "welcome": "Welcome to the decentralized future",
-        "contract_balance": "Contract Balance"
+        "buy_button": "Buy",
+        "sell_button": "Sell",
+        "claim_button": "Claim Share",
+        "buy": "Buy",
+        "sell": "Sell",
+        "claim": "Claim Share",
+        "cancel_popup": "Cancel",
+        "buy_title": "Buy",
+        "sell_title": "Sell",
+        "wallet_balance": "My balance",
+        "contract_balance": "Contract Balance",
+        "user_addr": "My address",
+        "current_price": "Current price",
+        "tx_rejected_msg": "You have canceled this transcation"
     },
-    "user": {
-        "register": {
-            "title": "Register New Account",
-            "email": "Email Address",
-            "username": "Username",
-            "password": "Password",
-            "confirm password": "Confirm Password",
-            "register": "Register"
-        },
-        "login": {
-            "user login": "User Login",
-            "remember me": "Remember me",
-            "forgot password": "Forgot password",
-            "login": "Login",
-            "register new account": "Register new account",
-            "or": "or",
-            "username": "Username",
-            "password": "Password"
-        }
+    "history": {
+        "player": "player",
+        "amount": "amount",
+        "price": "price",
+        "time": "time"
     },
     "navbar": {
+        "faq": "FAQ",
         "theme": "Theme",
         "home": "Home",
-        "my account": "My Account",
         "unit": "Unit"
     },
     "theme": {
