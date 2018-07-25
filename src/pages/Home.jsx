@@ -14,29 +14,6 @@ const contract = 'n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi';
 //     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
 // ]
 
-const columns = [{
-    title: '玩家',
-    dataIndex: 'player',
-    key: 'player',
-}, {
-    title: '数量',
-    dataIndex: 'amount',
-    key: 'amount',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => parseInt(a.BTC, 10) - parseInt(b.BTC, 10),
-}, {
-    title: '价格',
-    dataIndex: 'price',
-    key: 'price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => parseInt(a.ETH, 10) - parseInt(b.ETH, 10),
-}, {
-    title: '时间',
-    dataIndex: 'time',
-    key: 'time',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => parseInt(a.EOS, 10) - parseInt(b.EOS, 10),
-}];
 
 const bannerStyle = {
     padding: `6rem`,
@@ -328,6 +305,29 @@ class Home extends React.Component {
     render() {
         const { account } = this.props
         const { current_balance, current_price, buyList } = this.state
+        const columns = [{
+            title: intl.get("history.player"),
+            dataIndex: 'player',
+            key: 'player',
+        }, {
+            title: intl.get("history.amount"),
+            dataIndex: 'amount',
+            key: 'amount',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => parseInt(a.BTC, 10) - parseInt(b.BTC, 10),
+        }, {
+            title: intl.get("history.price"),
+            dataIndex: 'price',
+            key: 'price',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => parseInt(a.ETH, 10) - parseInt(b.ETH, 10),
+        }, {
+            title: intl.get("history.time"),
+            dataIndex: 'time',
+            key: 'time',
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => parseInt(a.EOS, 10) - parseInt(b.EOS, 10),
+        }];
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
