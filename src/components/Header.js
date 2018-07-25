@@ -5,7 +5,8 @@ import { Layout, Menu, Icon, Row, Col, Avatar, Tooltip } from "antd";
 import "nasa.js";
 import { NasTool } from "../api/tool";
 import axios from "axios";
-import blockies from "ethereum-blockies-png";
+// import blockies from "ethereum-blockies-png";
+import NasId from "../api/nasid";
 import BrandLight from "../Brand-Light1.svg";
 import BrandDark from "../Brand-Dark1.svg";
 const { Header } = Layout;
@@ -48,7 +49,12 @@ const navbarI18n = (name) => intl.get(`navbar.${name}`)
 class HeaderComponent extends Component {
     constructor() {
         super()
+        // initial state
         this.state = {
+            avatar: {
+                icon: 'user'
+            },
+            nickname: null,
             balance: 0
         }
     }
@@ -57,14 +63,26 @@ class HeaderComponent extends Component {
         const { login } = this.props
         const addr = await window.Nasa.user.getAddr()
         login(addr)
-        let balance = await getBalance(addr)
-        balance = NasTool.fromWeiToNas(balance).toFixed(2).toString(10)
-        this.setState({ balance })
+        // 与星云api交互 may need catch error
+        try {
+            let balance = await getBalance(addr)
+            balance = NasTool.fromWeiToNas(balance).toFixed(2).toString(10)
+            this.setState({ balance })
+        } catch (error) {
+            alert('辣鸡星云服务器又玩访问延时了')
+        }
+
+        NasId(addr).then(resp => {
+            let avatar = {}
+            avatar.src = resp.avatar
+            let { nickname } = resp
+            this.setState({ avatar, nickname })
+        })
     }
 
     render() {
         const { location, lang, setLanguage, theme, setTheme, account } = this.props
-        const { balance } = this.state
+        const { balance, avatar, nickname } = this.state
         const navigationMenus = [
             {
                 path: '/',
@@ -129,8 +147,9 @@ class HeaderComponent extends Component {
                                 <Menu.Item style={{ float: 'right' }}>
                                     <Tooltip placement="bottom" title={`钱包地址 ${account}`}>
                                     <Avatar size="large"
-                                        src={blockies.createDataURL({ seed: account })} />
-                                    <span>{balance} NAS</span>
+                                    {...avatar} />
+                                    <span> {balance} NAS</span>
+                                    <span> {nickname} </span>
                             </Tooltip>
                                 </Menu.Item>
                         }
