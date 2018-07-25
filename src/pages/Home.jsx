@@ -14,7 +14,6 @@ const contract = 'n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi';
 //     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
 // ]
 
-
 const bannerStyle = {
     padding: `6rem`,
     color: `#fafafa`,
@@ -82,7 +81,7 @@ function ClaimEvent(e) {
         .catch((e) => {
             let msg = e.message
             if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                msg = '您已取消交易！'
+                msg = intl.get("homepage.tx_rejected_msg");
             }
             alert(msg)
         })
@@ -102,7 +101,7 @@ class BuyPopup extends React.Component {
             .catch((e) => {
                 let msg = e.message
                 if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                    msg = '您已取消交易！'
+                    msg = intl.get("homepage.tx_rejected_msg");
                 }
                 alert(msg)
             })
@@ -257,7 +256,6 @@ class Home extends React.Component {
             current_price: null,
             buyList: null
         };
-
     }
 
     async fetchPriceAndBalance() {
