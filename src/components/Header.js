@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { NavLink } from 'react-router-dom';
 import intl from "react-intl-universal";
-import { Layout, Menu, Icon, Row, Col, Avatar } from "antd";
-import nasa from "nasa.js";
+import { Layout, Menu, Icon, Row, Col, Avatar, Tooltip } from "antd";
+import "nasa.js";
 import { NasTool } from "../api/tool";
 import axios from "axios";
 import blockies from "ethereum-blockies-png";
@@ -125,11 +125,14 @@ class HeaderComponent extends Component {
                             <Menu.Item onClick={() => setLanguage('SWITCH_TO_KOREAN')}>한국말</Menu.Item>
                         </SubMenu>
                         {
-                            account && <Menu.Item style={{ float: 'right' }}>
-                                <Avatar size="large"
-                                    src={blockies.createDataURL({ seed: account })} />
-                                <span>{ balance } NAS</span>
-                            </Menu.Item>
+                            account &&
+                                <Menu.Item style={{ float: 'right' }}>
+                                    <Tooltip placement="bottom" title={`钱包地址 ${account}`}>
+                                    <Avatar size="large"
+                                        src={blockies.createDataURL({ seed: account })} />
+                                    <span>{balance} NAS</span>
+                            </Tooltip>
+                                </Menu.Item>
                         }
                     </Menu>
                 </Col>
