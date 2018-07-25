@@ -38,42 +38,6 @@ const columns = [{
     sorter: (a, b) => parseInt(a.EOS, 10) - parseInt(b.EOS, 10),
 }];
 
-// async function initializePrice() {
-//     var args = []
-
-//     //alert(window.Nasa.env.get())
-//     window.Nasa.query(contract, "getPrice", args)
-//         .then((price) => {
-//             current_price = price
-//             this.setState({
-//                 current_price:price
-//             })
-//             alert("Price:" + current_price)
-//             setTimeout(() => {
-//             }, 5000)
-//         })
-//         .catch((e) => {
-//             let msg = e.message
-//             if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-//                 msg = '您已取消交易！'
-//             }
-//             alert(msg)
-//         })
-//     window.Nasa.query(contract, "getProfitPool", args)
-//         .then((balance) => {
-//             current_balance = balance
-//             setTimeout(() => {
-//             }, 5000)
-//         })
-//         .catch((e) => {
-//             let msg = e.message
-//             if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-//                 msg = '您已取消交易！'
-//             }
-//             alert(msg)
-//         })
-// }
-
 const bannerStyle = {
     padding: `6rem`,
     color: `#fafafa`,
@@ -84,7 +48,7 @@ const bannerStyle = {
 const popupStyle = {
     position: `fixed`,
     width: "100%",
-    height: "100%",
+    height: "70%",
     top: 0,
     left: 0,
     right: 0,
@@ -174,7 +138,7 @@ class BuyPopup extends React.Component {
                     <div style={lableStyle}>
                         Gas:
                     </div>
-                    <Input id="gas" placeholder="Input a amount in gas" maxLength={25} />
+                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
                     <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
@@ -207,7 +171,7 @@ class SellPopup extends React.Component {
             .catch((e) => {
                 let msg = e.message
                 if (msg === window.Nasa.error.TX_REJECTED_BY_USER) {
-                    msg = '您已取消交易！'
+                    msg = intl.get("homepage.tx_rejected_msg");
                 }
                 alert(msg)
             })
@@ -221,7 +185,7 @@ class SellPopup extends React.Component {
                     <div style={lableStyle}>
                         Gas:
                     </div>
-                    <Input id="gas" placeholder="Input a amount in gas" maxLength={25} />
+                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
                     <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
@@ -305,6 +269,7 @@ class Timing extends PureComponent {
         );
     }
 }
+
 class Home extends React.Component {
     constructor() {
         super();
@@ -316,9 +281,6 @@ class Home extends React.Component {
         };
 
     }
-
-
-
 
     async fetchPriceAndBalance() {
         const price = await window.Nasa.query(contract, "getPrice", [])
@@ -343,7 +305,6 @@ class Home extends React.Component {
         })
     }
 
-
     async componentDidMount() {
         const { current_price, current_balance } = await this.fetchPriceAndBalance();
         this.setState({ current_price, current_balance })
@@ -356,11 +317,13 @@ class Home extends React.Component {
             showBuyPopup: !this.state.showBuyPopup
         });
     }
+
     toggleSellPopup() {
         this.setState({
             showSellPopup: !this.state.showSellPopup
         });
     }
+
     render() {
         const { account } = this.props
         const { current_balance, current_price, buyList } = this.state
