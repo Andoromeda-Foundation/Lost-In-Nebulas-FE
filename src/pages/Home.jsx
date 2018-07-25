@@ -52,7 +52,8 @@ const popupStyle = {
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
+    zIndex: 1
 }
 
 const popupInnerStyle = {
@@ -135,10 +136,6 @@ class BuyPopup extends React.Component {
             <div className='popup' style={popupStyle}>
                 <div className='popup_inner' style={popupInnerStyle}>
                     <h1 style={headerStyle}>{this.props.text}</h1>
-                    <div style={lableStyle}>
-                        Gas:
-                    </div>
-                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
                     <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
@@ -146,6 +143,10 @@ class BuyPopup extends React.Component {
                         placeholder="Input a amount in NAS"
                         maxLength="25"
                     />
+                    <div style={lableStyle}>
+                        Gas:
+                    </div>
+                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.BuyEvent}>
                         {intl.get('homepage.buy_button')}
                     </Button>
@@ -182,10 +183,6 @@ class SellPopup extends React.Component {
             <div className='popup' style={popupStyle}>
                 <div className='popup_inner' style={popupInnerStyle}>
                     <h1 style={headerStyle}>{this.props.text}</h1>
-                    <div style={lableStyle}>
-                        Gas:
-                    </div>
-                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
                     <div style={lableStyle}>Nas:</div>
                     <Input
                         {...this.props}
@@ -193,6 +190,10 @@ class SellPopup extends React.Component {
                         placeholder="Input a amount in Token"
                         maxLength="25"
                     />
+                    <div style={lableStyle}>
+                        Gas:
+                    </div>
+                    <Input id="gas" value="200000" placeholder="Input a amount in gas" maxLength={25} />
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.SellEvent}>
                         {intl.get('homepage.sell_button')}
                     </Button>
