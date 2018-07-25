@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from 'react-router-dom';
 import intl from "react-intl-universal";
-import { Layout, Menu, Icon, Row, Col, Avatar, Tooltip } from "antd";
+import { Layout, Menu, Icon, Row, Col, Avatar, Tooltip, notification } from "antd";
 import "nasa.js";
 import { NasTool } from "../api/tool";
 import axios from "axios";
@@ -61,15 +61,29 @@ class HeaderComponent extends Component {
 
     async componentDidMount() {
         const { login } = this.props
-        const addr = await window.Nasa.user.getAddr()
-        login(addr)
-        // 与星云api交互 may need catch error
+        let addr = '';
+        try {
+            addr = await window.Nasa.user.getAddr()
+            login(addr)
+        } catch (error) {
+            notification.error({
+                message: '无法检查你的钱包地址',
+                description: '请确保你安装了浏览器插件或使用 Nano App打开',
+                duration: null
+            })
+            return; // stop running down
+        }
+        // 与星云api交互 
         try {
             let balance = await getBalance(addr)
             balance = NasTool.fromWeiToNas(balance).toFixed(2).toString(10)
             this.setState({ balance })
         } catch (error) {
-            alert('辣鸡星云服务器又玩访问延时了')
+            notification.warning({
+                message: '无法获取你的钱包余额',
+                description: '星云服务器又玩访问延时了，暂时无法知晓你的钱包余额',
+                duration: 10
+            })
         }
 
         NasId(addr).then(resp => {
@@ -144,14 +158,14 @@ class HeaderComponent extends Component {
                         </SubMenu>
                         {
                             account &&
-                                <Menu.Item style={{ float: 'right' }}>
-                                    <Tooltip placement="bottom" title={`钱包地址 ${account}`}>
+                            <Menu.Item style={{ float: 'right' }}>
+                                <Tooltip placement="bottom" title={`钱包地址 ${account}`}>
                                     <Avatar size="large"
-                                    {...avatar} />
+                                        {...avatar} />
                                     <span> {balance} NAS</span>
                                     <span> {nickname} </span>
-                            </Tooltip>
-                                </Menu.Item>
+                                </Tooltip>
+                            </Menu.Item>
                         }
                     </Menu>
                 </Col>
