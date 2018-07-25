@@ -28,6 +28,10 @@ export default async function fetchAccountDetail(address) {
         return null;
     }
     const result = await call({ from: address, functionName: 'get' });
-    return JSON.parse(result);
+    if (typeof result === 'object') {
+        return JSON.parse(result);
+    } else {
+        return {}
+    }
 }
 
