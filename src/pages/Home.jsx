@@ -10,9 +10,9 @@ import getcontract from "../api/contractbackend.js";
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
 const contract = 'n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi';
 
-var BuyList = [
-    { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
-]
+// var buyList = [
+//     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
+// ]
 
 const columns = [{
     title: '玩家',
@@ -312,7 +312,7 @@ class Home extends React.Component {
             showPopup: false,
             current_balance: null,
             current_price: null,
-            BuyList: null
+            buyList: null
         };
 
     }
@@ -347,8 +347,8 @@ class Home extends React.Component {
     async componentDidMount() {
         const { current_price, current_balance } = await this.fetchPriceAndBalance();
         this.setState({ current_price, current_balance })
-        const BuyList = await this.getList();
-        this.setState({ BuyList })
+        const buyList = await this.getList();
+        this.setState({ buyList })
     }
 
     toggleBuyPopup() {
@@ -363,12 +363,13 @@ class Home extends React.Component {
     }
     render() {
         const { account } = this.props
+        const { current_balance, current_price, buyList } = this.state
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                    <div> {intl.get("homepage.contract_balance")}: {this.state.current_balance} NAS</div>
+                    <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
                     <div> {intl.get("homepage.user_addr")}: {account} </div>
-                    <div> {intl.get("homepage.current_price")}: {this.state.current_price} </div>
+                    <div> {intl.get("homepage.current_price")}: {current_price} </div>
                     <Timing />
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
                         {intl.get('homepage.buy_button')}
@@ -400,7 +401,7 @@ class Home extends React.Component {
                         游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。
                     <div>gas 燃料价格等于: basePrice + k x supply</div>
                     </div>
-                    <Table dataSource={this.state.BuyList} columns={columns} style={{ background: `white` }} />
+                    <Table dataSource={buyList} columns={columns} style={{ background: `white` }} />
                 </div>
             </div>
         );
