@@ -14,7 +14,6 @@ export class NasTool {
   }
 }
 
-let store = [];
 
 export const getMe = async () => new Promise((resolve) => {
   window.postMessage({
