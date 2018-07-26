@@ -5,7 +5,7 @@ import "nasa.js";
 // import styles from './timing.less';
 import { NasTool } from "../api/tool";
 import moment from 'moment'
-import { Button, Input, Table, Modal, Avatar } from "antd";
+import { Button, Input, Table, Modal, Avatar,Card, Col, Row } from "antd";
 import getcontract from "../api/contractbackend.js";
 import NasId from "../api/nasid";
 var _ = require('lodash');
@@ -64,6 +64,9 @@ const timingStyle = {
     fontSize: '3rem'
 }
 
+const priceStyle={
+    fontSize:'1rem'
+}
 const K = new BigNumber(NasTool.fromNasToWei(0.000000001).toString())
 
 // const titleStyle = {
@@ -437,12 +440,31 @@ class Home extends React.Component {
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                    <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
+                    <div style={{ background: '#ECECEC', padding: '10px' }}>
+                        <Row>
+                            <Col span="4">
+                                <Card title={intl.get("homepage.contract_balance")} bordered={false}> {current_balance} NAS</Card>
+                            </Col>
+                            <Col span="4">
+                                <Card title={intl.get("homepage.contract_claim_balance")} bordered={false}>  {claim_balance} NAS</Card>
+                            </Col>
+                            <Col span="4">
+                                <Card title={intl.get("homepage.contract_bonus_balance")} bordered={false}> {bonus_balance} NAS</Card>
+                            </Col>
+                            <Col span="4">
+                                <Card title={intl.get("homepage.my_claim_balance")} bordered={false}> {my_claim_balance} NAS</Card>
+                            </Col>
+                            <Col span="8">
+                                <Card title={intl.get("homepage.user_addr")} bordered={false}> {account} NAS</Card>
+                            </Col>
+                        </Row>
+                    </div>
+                  {/*  <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
                     <div> {intl.get("homepage.contract_claim_balance")}: {claim_balance} NAS</div>
                     <div> {intl.get("homepage.contract_bonus_balance")}: {bonus_balance} NAS</div>
                     <div> {intl.get("homepage.my_claim_balance")}: {my_claim_balance} NAS</div>
-                    <div> {intl.get("homepage.user_addr")}: {account} </div>
-                    <div> {intl.get("homepage.current_price")}: {current_price} </div>
+                    <div> {intl.get("homepage.user_addr")}: {account} </div>*/}
+                    <div style={priceStyle}> {intl.get("homepage.current_price")}: {current_price} NAS</div>
                     <Timing />
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
                         {intl.get('homepage.buy_button')}
