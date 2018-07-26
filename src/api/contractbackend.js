@@ -6,10 +6,10 @@ var _ = require('lodash');
 var async = require('async');
 var request = require("request");
 
-// var nebulas = require("nebulas"),
-//     Account = nebulas.Account,
-//     neb = new nebulas.Neb();
-// neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io")); //test
+var nebulas = require("nebulas"),
+    Account = nebulas.Account,
+    neb = new nebulas.Neb();
+neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io")); //test
 // neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io")); //main
 
 var netbegin = 'https://explorer.nebulas.io/test/api/';
@@ -55,7 +55,7 @@ export default (contract) => new Promise((resolve, reject) => {
                 }catch(e){
 
                 }
-                _.each(txnList, (tx) => {
+                _.each(txnList, async (tx) => {
                     var _tx = {
                         address: tx.from.hash,
                         balance: tx.from.balance / 10 ** 18
@@ -63,16 +63,28 @@ export default (contract) => new Promise((resolve, reject) => {
 
                     var func = JSON.parse(tx.data).Function;
                     
-                    // console.log(tx);
+                    console.log(tx);
                     var one = {};
                         one.key = buylist.length + 1;
                         one.event = func;
                         one.player = tx.from.hash;
                         one.price = tx.value / 10**18;
-                        one.amount = 1;
-                        one.timesecond = tx.timestamp / 1000;
-                        one.time = new Date(one.timesecond * 1000).toLocaleString();
-                        buylist.unshift(one);
+                        let events = await new Promise((resolve,reject) => { neb.api.getEventsByHash({hash: tx.hash})
+								.then((events) => {
+                                    one.amount = JSON.parse(events.events[2].data).Transfer.amount;
+                                    one.timesecond = tx.timestamp / 1000;
+                                    one.time = new Date(one.timesecond * 1000).toLocaleString();
+                                    buylist.unshift(one);
+                                    resolve(events)
+									// startround(JSON.parse(events.events[0].data).Newround);
+								})
+								.catch((e) => {
+                                });
+                            });
+                        // one.amount = 1;
+                        // let events = await neb.api.getEventsByHash({hash: tx.hash});
+                        // console.log(events);
+                        
 
                     txArr.push(_tx);
                 })
