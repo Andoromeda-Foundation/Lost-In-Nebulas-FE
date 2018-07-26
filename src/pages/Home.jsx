@@ -100,7 +100,8 @@ class BuyPopup extends React.Component {
             gas:null,
             nas:null,
             supply:null,
-            basicPrice:'0.000001'
+            basicPrice:'0.000001',
+            current_price: this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
@@ -131,8 +132,8 @@ class BuyPopup extends React.Component {
         const nas = this.state.basicPrice*e.target.value;
         document.getElementById("buy_amount").value = nas;
    }
-   nasToGas(e){       
-        let price = new BigNumber(this.current_price);
+   nasToGas(e){
+        let price = new BigNumber(this.state.current_price);
         let value = new BigNumber(e.target.value);
         var a = K;
         var b = (new BigNumber(price)).multipliedBy(2);
@@ -173,7 +174,8 @@ class SellPopup extends React.Component {
             gas:null,
             nas:null,
             supply:null,
-            basicPrice:'0.000001'
+            basicPrice:'0.000001',
+            current_price:this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
@@ -200,8 +202,14 @@ class SellPopup extends React.Component {
         document.getElementById("sell_amount").value = nas;
     }
     nasToGas(e){
-        const gas = e.target.value/this.state.basicPrice;
-        document.getElementById("sell_gas").value = gas;
+        let price = new BigNumber(this.state.current_price);
+        let value = new BigNumber(e.target.value);
+        var a = K;
+        var b = (new BigNumber(price)).multipliedBy(2);
+        var c = (new BigNumber(0)).minus(value.multipliedBy(2));
+        var x = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+
+        document.getElementById("sell_gas").value = price;
     }
     render() {
         return (
@@ -440,6 +448,7 @@ class Home extends React.Component {
                             text={intl.get('homepage.buy_title')}
                             visible={this.state.showBuyPopup}
                             close_popup={this.toggleBuyPopup.bind(this)}
+                            current_price={current_price}
                         />
                         : null
                     }
@@ -448,6 +457,7 @@ class Home extends React.Component {
                             text={intl.get('homepage.sell_title')}
                             visible={this.state.showSellPopup}
                             close_popup={this.toggleSellPopup.bind(this)}
+                            current_price={current_price}
                         />
                         : null
                     }
