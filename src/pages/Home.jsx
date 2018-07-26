@@ -5,7 +5,7 @@ import "nasa.js";
 // import styles from './timing.less';
 import { NasTool } from "../api/tool";
 import moment from 'moment'
-import { Button, Input, Table, Modal, Avatar,Card, Col, Row } from "antd";
+import { Button, Input, Table, Modal, Avatar,Card, Col, Row, Icon } from "antd";
 import getcontract from "../api/contractbackend.js";
 import NasId from "../api/nasid";
 var _ = require('lodash');
@@ -445,19 +445,54 @@ class Home extends React.Component {
                 <div className="banner" style={bannerStyle}>
                         <Row>
                             <Col span="5" style={colStyle}>
-                                <Card title={intl.get("homepage.contract_balance")} bordered={false}> {current_balance} NAS</Card>
+                                <Card bordered={false}>
+                                    <div className="custom-image" style={{marginBottom:'5px'}}>
+                                        {intl.get("homepage.contract_balance")}
+                                    </div>
+                                    <div className="custom-card">
+                                    {current_balance} NAS
+                                    </div>
+                                </Card>
                             </Col>
                             <Col span="5" style={colStyle}>
-                                <Card title={intl.get("homepage.contract_claim_balance")} bordered={false}>  {claim_balance} NAS</Card>
+                                <Card  bordered={false}>
+                                    <div className="custom-image" style={{marginBottom:'5px'}}>
+                                        {intl.get("homepage.contract_claim_balance")}
+                                    </div>
+                                    <div className="custom-card">
+                                    {claim_balance} NAS
+                                    </div>
+                                </Card>
                             </Col>
                             <Col span="5" style={colStyle}>
-                                <Card title={intl.get("homepage.contract_bonus_balance")} bordered={false}> {bonus_balance} NAS</Card>
+                                <Card bordered={false}>
+                                    <div className="custom-image" style={{marginBottom:'5px'}}>
+                                        {intl.get("homepage.contract_bonus_balance")}
+                                    </div>
+                                    <div className="custom-card">
+                                        {bonus_balance} NAS
+                                    </div>
+                                </Card>
                             </Col>
                             <Col span="5" style={colStyle}>
-                                <Card title={intl.get("homepage.my_claim_balance")} bordered={false}> {my_claim_balance} NAS</Card>
+                                <Card bordered={false}>
+                                    <div className="custom-image" style={{marginBottom:'5px'}}>
+                                        {intl.get("homepage.my_claim_balance")}
+                                    </div>
+                                    <div className="custom-card">
+                                    {my_claim_balance} NAS
+                                    </div>
+                                </Card>
                             </Col>
                             <Col span="4" style={colStyle}>
-                                <Card title={intl.get("homepage.current_price")} bordered={false}> {current_price} NAS</Card>
+                                <Card bordered={false}>
+                                    <div className="custom-image" style={{marginBottom:'5px'}}>
+                                        {intl.get("homepage.current_price")}
+                                    </div>
+                                    <div className="custom-card">
+                                        {current_price} NAS
+                                    </div>
+                                </Card>
                             </Col>
                         </Row>
                   {/*  <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
