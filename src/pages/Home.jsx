@@ -201,7 +201,7 @@ class SellPopup extends React.Component {
                 onOk={this.SellEvent}
                 onCancel={this.props.close_popup}
             >
-                    <div style={lableStyle}>Nas:</div>
+                    <div style={lableStyle}>Token:</div>
                     <Input
                         {...this.props}
                         id="sell_amount"
