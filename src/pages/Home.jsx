@@ -502,6 +502,7 @@ class Home extends React.Component {
                     <div> {intl.get("homepage.user_addr")}: {account} </div>*/}
                     {/*<div style={priceStyle}> {intl.get("homepage.current_price")}: {current_price} NAS</div>*/}
                     <Timing />
+                    <div> {intl.get("homepage.user_addr")}: {account} </div>
                     <Button type="primary" size="large" style={buttonStyle} onClick={this.toggleBuyPopup.bind(this)}>
                         {intl.get('homepage.buy_button')}
                     </Button>
