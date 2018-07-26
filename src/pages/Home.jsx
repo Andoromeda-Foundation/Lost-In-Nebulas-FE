@@ -1,11 +1,11 @@
-import {BigNumber} from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 import React, { PureComponent } from "react";
 import intl from "react-intl-universal";
 import "nasa.js";
 // import styles from './timing.less';
 import { NasTool } from "../api/tool";
 import moment from 'moment'
-import { Button, Input, Table, Modal, Avatar,Card, Col, Row, Icon } from "antd";
+import { Button, Input, Table, Modal, Avatar, Card, Col, Row, Icon } from "antd";
 import getcontract from "../api/contractbackend.js";
 import NasId from "../api/nasid";
 var _ = require('lodash');
@@ -64,11 +64,11 @@ const timingStyle = {
     fontSize: '3rem'
 }
 
-const colStyle ={
+const colStyle = {
     padding: '0 10px'
 }
-const priceStyle={
-    fontSize:'1rem'
+const priceStyle = {
+    fontSize: '1rem'
 }
 const K = new BigNumber(NasTool.fromNasToWei(0.000000001).toString())
 
@@ -100,22 +100,21 @@ function ClaimEvent(e) {
 }
 
 class BuyPopup extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            gas:null,
-            nas:null,
-            supply:null,
-            basicPrice:'0.000001',
-            current_price: this.props.current_price
+        this.state = {
+            gas: null,
+            nas: null,
+            supply: null,
+            current_price: new BigNumber("1000000000000000000") // this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
     }
-// async componentDidMount(){
-//     const supply = await window.Nasa.query(contract, "totalSupply", [])
-//     this.setState({supply});
-// }
+    // async componentDidMount(){
+    //     const supply = await window.Nasa.query(contract, "totalSupply", [])
+    //     this.setState({supply});
+    // }
     BuyEvent(e) {
         var args = []
         var option = {
@@ -134,20 +133,24 @@ class BuyPopup extends React.Component {
                 alert(msg)
             })
     }
-   gasToNas(e){    
-        const nas = this.state.basicPrice*e.target.value;
+    gasToNas(e) {
+        let current_price = new BigNumber(this.state.current_price)
+        let wei = (current_price.multipliedBy(2).plus(K.multipliedBy(e.target.value))).multipliedBy(e.target.value).dividedBy(2)
+        let nas = NasTool.fromWeiToNas(wei)
         document.getElementById("buy_amount").value = nas;
-   }
-   nasToGas(e){
-        let price = new BigNumber(this.state.current_price);
-        let value = new BigNumber(e.target.value);
-        var a = K;
-        var b = (new BigNumber(price)).multipliedBy(2);
-        var c = (new BigNumber(0)).minus(value.multipliedBy(2));
-        var x = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+    }
 
-       document.getElementById("gas").value = price;       
-   }
+    nasToGas(e) {
+        let price = new BigNumber(this.state.current_price)
+        let value = new BigNumber(e.target.value)
+        let wei = NasTool.fromNasToWei(value)
+        let a = K;
+        let b = (new BigNumber(price)).multipliedBy(2);
+        let c = (new BigNumber(0)).minus(wei.multipliedBy(2));
+        let x = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        document.getElementById("gas").value = x;
+    }
+    
     render() {
         return (
             <Modal
@@ -174,14 +177,14 @@ class BuyPopup extends React.Component {
 }
 
 class SellPopup extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            gas:null,
-            nas:null,
-            supply:null,
-            basicPrice:'0.000001',
-            current_price:this.props.current_price
+        this.state = {
+            gas: null,
+            nas: null,
+            supply: null,
+            basicPrice: '0.000001',
+            current_price: new BigNumber("1000000000000000000") // this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
@@ -203,19 +206,21 @@ class SellPopup extends React.Component {
                 alert(msg)
             })
     }
-    gasToNas(e){
-        const nas = this.state.basicPrice*e.target.value;
+    gasToNas(e) {
+        let current_price = new BigNumber(this.state.current_price)
+        let wei = (current_price.multipliedBy(2).minus(K.multipliedBy(e.target.value))).multipliedBy(e.target.value).dividedBy(2)
+        let nas = NasTool.fromWeiToNas(wei)
         document.getElementById("sell_amount").value = nas;
     }
-    nasToGas(e){
-        let price = new BigNumber(this.state.current_price);
-        let value = new BigNumber(e.target.value);
-        var a = K;
-        var b = (new BigNumber(price)).multipliedBy(2);
-        var c = (new BigNumber(0)).minus(value.multipliedBy(2));
-        var x = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
-
-        document.getElementById("sell_gas").value = price;
+    nasToGas(e) {
+        let price = new BigNumber(this.state.current_price)
+        let value = new BigNumber(e.target.value)
+        let wei = NasTool.fromNasToWei(value)
+        let a = K;
+        let b = (new BigNumber(0).minus(price)).multipliedBy(2);
+        let c = (new BigNumber(wei).multipliedBy(2));
+        let x = (new BigNumber(0)).minus(b).minus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        document.getElementById("sell_gas").value = x;
     }
     render() {
         return (
@@ -225,19 +230,19 @@ class SellPopup extends React.Component {
                 onOk={this.SellEvent}
                 onCancel={this.props.close_popup}
             >
-                    <div style={lableStyle}>Token:</div>
-                    <Input
-                        {...this.props}
-                        id="sell_amount"
-                        placeholder="Input a amount in Token"
-                        maxLength="25"
-                        onKeyUp={this.nasToGas}
-                    />
-                    <div style={lableStyle}>
-                        Gas:
+                <div style={lableStyle}>Token:</div>
+                <Input
+                    {...this.props}
+                    id="sell_amount"
+                    placeholder="Input a amount in Token"
+                    maxLength="25"
+                    onKeyUp={this.nasToGas}
+                />
+                <div style={lableStyle}>
+                    Gas:
                     </div>
-                    <Input id="sell_gas" onKeyUp={this.gasToNas} placeholder="Input a amount in gas" maxLength="25" />
-                </Modal>
+                <Input id="sell_gas" onKeyUp={this.gasToNas} placeholder="Input a amount in gas" maxLength="25" />
+            </Modal>
         );
     }
 }
@@ -324,9 +329,9 @@ class Home extends React.Component {
     async fetchPriceAndBalance() {
         const price = await window.Nasa.query(contract, "getPrice", [])
         const claim_balance = await window.Nasa.query(contract, "getProfitPool", [])
-        const bonus_balance = await window.Nasa.query(contract, "getBonusPool" , [])
-        const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit" , [])
-        const my_claim_balance_b = await window.Nasa.query(contract, "getClaimedProfit" , [])
+        const bonus_balance = await window.Nasa.query(contract, "getBonusPool", [])
+        const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit", [])
+        const my_claim_balance_b = await window.Nasa.query(contract, "getClaimedProfit", [])
         const my_claim_balance = my_claim_balance_a - my_claim_balance_b;
         const current_price = NasTool.fromWeiToNas(price).toString()
         const current_balance = NasTool.fromWeiToNas(claim_balance).toString()
@@ -334,19 +339,19 @@ class Home extends React.Component {
     }
 
     async getList() {
-        try{
+        try {
             return await getcontract(contract)
-        }catch(e){
+        } catch (e) {
             return []
         }
     }
 
-    getnasid(list){
+    getnasid(list) {
         var nasidlist = []; //缓存，地址相同即读取此
-        _.each(list,async (one, index) => {
+        _.each(list, async (one, index) => {
             await new Promise((resolve, reject) => {
                 _.each(nasidlist, (oneoflist) => {
-                    if(one.player == oneoflist.player){
+                    if (one.player == oneoflist.player) {
                         var buyList = this.state.buyList
                         buyList[index].nickname = oneoflist.nickname;
                         buyList[index].avatar = oneoflist.avatar;
@@ -383,7 +388,7 @@ class Home extends React.Component {
 
     async componentDidMount() {
         const { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance } = await this.fetchPriceAndBalance();
-        this.setState({ current_price, current_balance, claim_balance,  bonus_balance, my_claim_balance})
+        this.setState({ current_price, current_balance, claim_balance, bonus_balance, my_claim_balance })
         const buyList = await this.getList();
         this.setState({ buyList })
         this.getnasid(buyList);
@@ -408,12 +413,12 @@ class Home extends React.Component {
             title: intl.get("history.player"),
             dataIndex: 'player',
             key: 'player',
-                render: (text, record) => (
-                    <span>
-                        <Avatar size="large" src={record.avatar} />
-                                    <span> {record.nickname} </span>
-                    </span>
-                ),
+            render: (text, record) => (
+                <span>
+                    <Avatar size="large" src={record.avatar} />
+                    <span> {record.nickname} </span>
+                </span>
+            ),
         }, {
             title: intl.get("history.event"),
             dataIndex: 'event',
@@ -443,59 +448,59 @@ class Home extends React.Component {
         return (
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
-                        <Row>
-                            <Col span="5" style={colStyle}>
-                                <Card bordered={false}>
-                                    <div className="custom-image" style={{marginBottom:'5px'}}>
-                                        {intl.get("homepage.contract_balance")}
-                                    </div>
-                                    <div className="custom-card">
+                    <Row>
+                        <Col span="5" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.contract_balance")}
+                                </div>
+                                <div className="custom-card">
                                     {current_balance} NAS
                                     </div>
-                                </Card>
-                            </Col>
-                            <Col span="5" style={colStyle}>
-                                <Card  bordered={false}>
-                                    <div className="custom-image" style={{marginBottom:'5px'}}>
-                                        {intl.get("homepage.contract_claim_balance")}
-                                    </div>
-                                    <div className="custom-card">
+                            </Card>
+                        </Col>
+                        <Col span="5" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.contract_claim_balance")}
+                                </div>
+                                <div className="custom-card">
                                     {claim_balance} NAS
                                     </div>
-                                </Card>
-                            </Col>
-                            <Col span="5" style={colStyle}>
-                                <Card bordered={false}>
-                                    <div className="custom-image" style={{marginBottom:'5px'}}>
-                                        {intl.get("homepage.contract_bonus_balance")}
+                            </Card>
+                        </Col>
+                        <Col span="5" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.contract_bonus_balance")}
+                                </div>
+                                <div className="custom-card">
+                                    {bonus_balance} NAS
                                     </div>
-                                    <div className="custom-card">
-                                        {bonus_balance} NAS
-                                    </div>
-                                </Card>
-                            </Col>
-                            <Col span="5" style={colStyle}>
-                                <Card bordered={false}>
-                                    <div className="custom-image" style={{marginBottom:'5px'}}>
-                                        {intl.get("homepage.my_claim_balance")}
-                                    </div>
-                                    <div className="custom-card">
+                            </Card>
+                        </Col>
+                        <Col span="5" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.my_claim_balance")}
+                                </div>
+                                <div className="custom-card">
                                     {my_claim_balance} NAS
                                     </div>
-                                </Card>
-                            </Col>
-                            <Col span="4" style={colStyle}>
-                                <Card bordered={false}>
-                                    <div className="custom-image" style={{marginBottom:'5px'}}>
-                                        {intl.get("homepage.current_price")}
+                            </Card>
+                        </Col>
+                        <Col span="4" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.current_price")}
+                                </div>
+                                <div className="custom-card">
+                                    {current_price} NAS
                                     </div>
-                                    <div className="custom-card">
-                                        {current_price} NAS
-                                    </div>
-                                </Card>
-                            </Col>
-                        </Row>
-                  {/*  <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
+                            </Card>
+                        </Col>
+                    </Row>
+                    {/*  <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
                     <div> {intl.get("homepage.contract_claim_balance")}: {claim_balance} NAS</div>
                     <div> {intl.get("homepage.contract_bonus_balance")}: {bonus_balance} NAS</div>
                     <div> {intl.get("homepage.my_claim_balance")}: {my_claim_balance} NAS</div>
