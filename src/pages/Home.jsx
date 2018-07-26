@@ -323,10 +323,10 @@ class Home extends React.Component {
 
     async fetchPriceAndBalance() {
         const price = await window.Nasa.query(contract, "getPrice", [])
-        const claim_balance = await window.Nasa.query(contract, "getProfitPool", [])
-        const bonus_balance = await window.Nasa.query(contract, "getBonusPool" , [])
-        const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit" , [])
-        const my_claim_balance_b = await window.Nasa.query(contract, "getClaimedProfit" , [])
+        const claim_balance = 1 //await window.Nasa.query(contract, "getProfitPool", [])
+        const bonus_balance = 1 // await window.Nasa.query(contract, "getBonusPool" , [])
+        const my_claim_balance_a = 1//await window.Nasa.query(contract, "getMyProfit" , [])
+        const my_claim_balance_b = 1//await window.Nasa.query(contract, "getClaimedProfit" , [])
         const my_claim_balance = my_claim_balance_a - my_claim_balance_b;
         const current_price = NasTool.fromWeiToNas(price).toString()
         const current_balance = NasTool.fromWeiToNas(claim_balance).toString()
