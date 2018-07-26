@@ -64,6 +64,9 @@ const timingStyle = {
     fontSize: '3rem'
 }
 
+const colStyle ={
+    padding: '0 5px'
+}
 const priceStyle={
     fontSize:'1rem'
 }
@@ -442,19 +445,19 @@ class Home extends React.Component {
                 <div className="banner" style={bannerStyle}>
                     <div style={{ background: '#ECECEC', padding: '10px' }}>
                         <Row>
-                            <Col span="4">
+                            <Col span="4" style={colStyle}>
                                 <Card title={intl.get("homepage.contract_balance")} bordered={false}> {current_balance} NAS</Card>
                             </Col>
-                            <Col span="4">
+                            <Col span="4" style={colStyle}>
                                 <Card title={intl.get("homepage.contract_claim_balance")} bordered={false}>  {claim_balance} NAS</Card>
                             </Col>
-                            <Col span="4">
+                            <Col span="4" style={colStyle}>
                                 <Card title={intl.get("homepage.contract_bonus_balance")} bordered={false}> {bonus_balance} NAS</Card>
                             </Col>
-                            <Col span="4">
+                            <Col span="4" style={colStyle}>
                                 <Card title={intl.get("homepage.my_claim_balance")} bordered={false}> {my_claim_balance} NAS</Card>
                             </Col>
-                            <Col span="8">
+                            <Col span="8" style={colStyle}>
                                 <Card title={intl.get("homepage.user_addr")} bordered={false}> {account} NAS</Card>
                             </Col>
                         </Row>
