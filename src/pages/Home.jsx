@@ -11,7 +11,7 @@ import NasId from "../api/nasid";
 var _ = require('lodash');
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1jwPPSDcDvwB8Urq7UwWM3UN6Qbk8B8rW8';
+const contract = 'n1ygG6Tx7L8WdyW1UiSFjy6g8SVn3gh6evd';
 
 // var buyList = [
 //     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
