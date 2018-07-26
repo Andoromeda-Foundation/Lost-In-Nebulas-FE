@@ -299,6 +299,9 @@ class Home extends React.Component {
         this.state = {
             showPopup: false,
             current_balance: null,
+            claim_balance: null,
+            bonus_balance: null,
+            my_claim_balance: null,
             current_price: null,
             buyList: null
         };
@@ -306,10 +309,14 @@ class Home extends React.Component {
 
     async fetchPriceAndBalance() {
         const price = await window.Nasa.query(contract, "getPrice", [])
-        const balance = await window.Nasa.query(contract, "getProfitPool", [])
+        const claim_balance = await window.Nasa.query(contract, "getProfitPool", [])
+        const bonus_balance = 1//await window.Nasa.query(contract, "getBonusPool" , [])
+        const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit" , [])
+        const my_claim_balance_b = await window.Nasa.query(contract, "getClaimedProfit" , [])
+        const my_claim_balance = my_claim_balance_a - my_claim_balance_b;
         const current_price = NasTool.fromWeiToNas(price).toString()
-        const current_balance = NasTool.fromWeiToNas(balance).toString()
-        return { current_price, current_balance }
+        const current_balance = NasTool.fromWeiToNas(claim_balance).toString()
+        return { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance }
     }
 
     async getList() {
@@ -361,8 +368,8 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        const { current_price, current_balance } = await this.fetchPriceAndBalance();
-        this.setState({ current_price, current_balance })
+        const { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance } = await this.fetchPriceAndBalance();
+        this.setState({ current_price, current_balance, claim_balance,  bonus_balance, my_claim_balance})
         const buyList = await this.getList();
         this.setState({ buyList })
         this.getnasid(buyList);
@@ -382,7 +389,7 @@ class Home extends React.Component {
 
     render() {
         const { account } = this.props
-        const { current_balance, current_price, buyList } = this.state
+        const { current_balance, current_price, claim_balance, bonus_balance, my_claim_balance, buyList } = this.state
         const columns = [{
             title: intl.get("history.player"),
             dataIndex: 'player',
@@ -423,6 +430,9 @@ class Home extends React.Component {
             <div className="index-page" style={{ marginTop: "-64px" }}>
                 <div className="banner" style={bannerStyle}>
                     <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
+                    <div> {intl.get("homepage.contract_claim_balance")}: {claim_balance} NAS</div>
+                    <div> {intl.get("homepage.contract_bonus_balance")}: {bonus_balance} NAS</div>
+                    <div> {intl.get("homepage.my_claim_balance")}: {my_claim_balance} NAS</div>
                     <div> {intl.get("homepage.user_addr")}: {account} </div>
                     <div> {intl.get("homepage.current_price")}: {current_price} </div>
                     <Timing />

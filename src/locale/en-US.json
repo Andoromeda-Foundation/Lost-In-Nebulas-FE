@@ -12,6 +12,9 @@
         "sell_title": "Sell",
         "wallet_balance": "My balance",
         "contract_balance": "Contract Balance",
+        "contract_claim_balance": "Claim Balance",
+        "contract_bonus_balance": "Bonus Balance",
+        "my_claim_balance": "My Claim Balance",
         "user_addr": "My address",
         "current_price": "Current price",
         "tx_rejected_msg": "You have canceled this transcation"

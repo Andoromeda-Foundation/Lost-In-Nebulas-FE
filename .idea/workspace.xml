@@ -78,6 +78,8 @@
       <find>setSate</find>
       <find>setState</find>
       <find>current_balance</find>
+      <find>claim_balance</find>
+      <find>bonus_balance</find>
       <find>args</find>
       <find>alert</find>
       <find>toggleBuyPopup</find>
