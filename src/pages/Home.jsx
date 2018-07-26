@@ -11,7 +11,7 @@ import NasId from "../api/nasid";
 var _ = require('lodash');
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1njMTuWN7KYR7GByaK16s8JYiiNocFkdB7';
+const contract = 'n1k7hUxzjrMgMCeYoFTLtaQqNEyBxEgUxNM';
 
 // var buyList = [
 //     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
@@ -106,7 +106,7 @@ class BuyPopup extends React.Component {
             gas: null,
             nas: null,
             supply: null,
-            current_price: new BigNumber("1000000000000000000") // this.props.current_price
+            current_price: this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
@@ -184,7 +184,7 @@ class SellPopup extends React.Component {
             nas: null,
             supply: null,
             basicPrice: '0.000001',
-            current_price: new BigNumber("1000000000000000000") // this.props.current_price
+            current_price: this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
@@ -210,11 +210,11 @@ class SellPopup extends React.Component {
         let current_price = new BigNumber(this.state.current_price)
         let wei = (current_price.multipliedBy(2).minus(K.multipliedBy(e.target.value))).multipliedBy(e.target.value).dividedBy(2)
         let nas = NasTool.fromWeiToNas(wei)
-        document.getElementById("sell_amount").value = nas;
+        document.getElementById("sell_amount").value = nas.dividedBy(2);
     }
     nasToGas(e) {
         let price = new BigNumber(this.state.current_price)
-        let value = new BigNumber(e.target.value)
+        let value = new BigNumber(e.target.value).multipliedBy(2)
         let wei = NasTool.fromNasToWei(value)
         let a = K;
         let b = (new BigNumber(0).minus(price)).multipliedBy(2);
@@ -230,7 +230,7 @@ class SellPopup extends React.Component {
                 onOk={this.SellEvent}
                 onCancel={this.props.close_popup}
             >
-                <div style={lableStyle}>Token:</div>
+                <div style={lableStyle}>NAS:</div>
                 <Input
                     {...this.props}
                     id="sell_amount"
