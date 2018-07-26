@@ -1,3 +1,4 @@
+import {BigNumber} from 'bignumber.js';
 import React, { PureComponent } from "react";
 import intl from "react-intl-universal";
 import "nasa.js";
@@ -62,6 +63,9 @@ const timingStyle = {
     color: '#fff',
     fontSize: '3rem'
 }
+
+const K = new BigNumber(NasTool.fromNasToWei(0.000000001).toString())
+
 // const titleStyle = {
 //     opacity: 1, transform: `translate(0px, 0px)`,
 //     fontSize: `68px`,
@@ -123,13 +127,19 @@ class BuyPopup extends React.Component {
                 alert(msg)
             })
     }
-   gasToNas(e){
+   gasToNas(e){    
         const nas = this.state.basicPrice*e.target.value;
-       document.getElementById("buy_amount").value = nas;
+        document.getElementById("buy_amount").value = nas;
    }
-   nasToGas(e){
-       const gas = e.target.value/this.state.basicPrice;
-       document.getElementById("gas").value = gas;
+   nasToGas(e){       
+        let price = new BigNumber(this.current_price);
+        let value = new BigNumber(e.target.value);
+        var a = K;
+        var b = (new BigNumber(price)).multipliedBy(2);
+        var c = (new BigNumber(0)).minus(value.multipliedBy(2));
+        var x = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+
+       document.getElementById("gas").value = price;       
    }
     render() {
         return (
