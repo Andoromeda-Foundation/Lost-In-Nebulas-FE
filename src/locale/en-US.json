@@ -16,6 +16,8 @@
         "contract_bonus_balance": "Bonus Balance",
         "my_claim_balance": "My Claim Balance",
         "user_addr": "My address",
+        "my_token" : "My Crystal",
+        "totalSupply" : "Total Crystal",          
         "current_price": "Current price",
         "tx_rejected_msg": "You have canceled this transcation"
     },

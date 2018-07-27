@@ -81,6 +81,7 @@ class BuyPopup extends React.Component {
             nas_amount: null,
             gas_amount: null,
             current_price: this.props.current_price,
+            totalSupply: null,
             my_token: null
         }
         this.gasToNas = this.gasToNas.bind(this);
@@ -331,6 +332,7 @@ class Home extends React.Component {
             my_claim_balance: null,
             current_price: null,
             my_token: null,
+            totalSupply: null,
             buyList: null
         };
     }
@@ -338,6 +340,7 @@ class Home extends React.Component {
     async fetchPriceAndBalance() {
         const price = await window.Nasa.query(contract, "getPrice", [])
         const my_token = await window.Nasa.query(contract, "balanceOf", [this.props.account])
+        const totalSupply = await window.Nasa.query(contract, "totalSupply", [])        
         const claim_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getProfitPool", [])).toString()
         const bonus_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getBonusPool", [])).toString()
         const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit", [])
@@ -345,7 +348,7 @@ class Home extends React.Component {
         const my_claim_balance = my_claim_balance_a;// - my_claim_balance_b;
         const current_price = NasTool.fromWeiToNas(price).toString()
         const current_balance = claim_balance
-        return { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance, my_token }
+        return { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance, my_token, totalSupply }
     }
 
     async getList() {
@@ -399,8 +402,8 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        const { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance, my_token } = await this.fetchPriceAndBalance();
-        this.setState({ current_price, current_balance, claim_balance, bonus_balance, my_claim_balance, my_token })
+        const { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance, my_token, totalSupply } = await this.fetchPriceAndBalance();
+        this.setState({ current_price, current_balance, claim_balance, bonus_balance, my_claim_balance, my_token, totalSupply })
         const buyList = await this.getList();
         this.setState({ buyList })
         this.getnasid(buyList);
@@ -420,7 +423,7 @@ class Home extends React.Component {
 
     render() {
         const { account } = this.props
-        const { current_balance, current_price, claim_balance, bonus_balance, my_claim_balance, my_token, buyList } = this.state
+        const { current_balance, current_price, claim_balance, bonus_balance, my_claim_balance, my_token, totalSupply, buyList } = this.state
         const columns = [{
             title: intl.get("history.player"),
             dataIndex: 'player',
@@ -520,7 +523,17 @@ class Home extends React.Component {
                                     {my_token?(my_token.substr(0,my_token.length>15?15:my_token.length)):0}NAS
                                     </div>
                             </Card>
-                        </Col>                        
+                        </Col>      
+                        <Col span="4" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.totalSupply")}
+                                </div>
+                                <div className="custom-card">
+                                    {totalSupply?(totalSupply.substr(0,totalSupply.length>15?15:totalSupply.length)):0}NAS
+                                    </div>
+                            </Card>
+                        </Col>                                               
                     </Row>
                     {/*  <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
                     <div> {intl.get("homepage.contract_claim_balance")}: {claim_balance} NAS</div>
