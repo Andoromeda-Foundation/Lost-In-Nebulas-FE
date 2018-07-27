@@ -1,4 +1,5 @@
 import axios from "axios";
+import { notification } from "antd";
 const contractAddress = 'n1g3dNR43HN62cT8i72wGt747Z55dBYv1im'
 const api = 'https://mainnet.nebulas.io'
 
@@ -27,11 +28,18 @@ export default async function fetchAccountDetail(address) {
     if (address === null) {
         return null;
     }
-    const result = await call({ from: address, functionName: 'get' });
-    if (typeof result === 'string') {
-        return JSON.parse(result);
-    } else {
-        return {}
+
+    try {
+        const  result  = await call({ from: address, functionName: 'get' });
+        if (typeof result === 'string') {
+            return JSON.parse(result);
+        } else {
+            return {}
+        }
+    } catch (error) {
+        notification.warning({
+            title: 'Nebulas Sucks'
+        })
     }
 }
 
