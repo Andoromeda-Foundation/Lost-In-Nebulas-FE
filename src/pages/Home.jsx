@@ -448,7 +448,7 @@ class Home extends React.Component {
             title: intl.get("history.time"),
             dataIndex: 'time',
             key: 'time',
-            defaultSortOrder: 'descend',
+            sortOrder: 'descend',
             sorter: (a, b) => parseInt(a.timesecond, 10) - parseInt(b.timesecond, 10),
         }];
 
