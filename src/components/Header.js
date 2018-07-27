@@ -89,13 +89,18 @@ class HeaderComponent extends Component {
                 duration: 10
             })
         }
-
-        NasId(addr).then(resp => {
-            let avatar = {}
-            avatar.src = resp.avatar
-            let { nickname } = resp
-            this.setState({ avatar, nickname })
-        })
+        try {
+            // 获取头像
+            NasId(addr).then(resp => {
+                let avatar = {}
+                avatar.src = resp.avatar
+                let { nickname } = resp
+                this.setState({ avatar, nickname })
+            })
+        } catch (error) {
+            // do nothing.
+            // 无视头像获取失败，防止页面crash
+        }
     }
 
     render() {
