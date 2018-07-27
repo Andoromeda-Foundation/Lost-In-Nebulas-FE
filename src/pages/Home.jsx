@@ -377,7 +377,7 @@ class Home extends React.Component {
                     buyList[index].avatar = avatar.src;
                     this.setState({ buyList })
                     resolve();
-                })
+                }).catch(e => {}) // avoid page crash
             })
         })
     }
