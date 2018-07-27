@@ -450,7 +450,7 @@ class Home extends React.Component {
             title: intl.get("history.time"),
             dataIndex: 'time',
             key: 'time',
-            defaultSortOrder: 'descend',
+            sortOrder: 'descend',
             sorter: (a, b) => parseInt(a.timesecond, 10) - parseInt(b.timesecond, 10),
         }];
 
@@ -464,7 +464,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.contract_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {current_balance} NAS
+                                    {current_balance?(current_balance.substr(0,current_balance.length>15?15:current_balance.length)):0} NAS
                                     </div>
                             </Card>
                         </Col>
@@ -474,7 +474,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.contract_claim_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {claim_balance} NAS
+                                    {claim_balance?(claim_balance.substr(0,claim_balance.length>15?15:claim_balance.length)):0} NAS
                                     </div>
                             </Card>
                         </Col>
@@ -484,7 +484,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.contract_bonus_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {bonus_balance} NAS
+                                    {bonus_balance?(bonus_balance.substr(0,bonus_balance.length>15?15:bonus_balance.length)):0} NAS
                                     </div>
                             </Card>
                         </Col>
@@ -494,7 +494,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.my_claim_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {my_claim_balance} NAS
+                                    {my_claim_balance?(my_claim_balance.substr(0,my_claim_balance.length>15?15:my_claim_balance.length)):0} NAS
                                     </div>
                             </Card>
                         </Col>
@@ -504,7 +504,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.current_price")}
                                 </div>
                                 <div className="custom-card">
-                                    {current_price} NAS
+                                    {current_price?(current_price.substr(0,current_price.length>15?15:current_price.length)):0}NAS
                                     </div>
                             </Card>
                         </Col>
