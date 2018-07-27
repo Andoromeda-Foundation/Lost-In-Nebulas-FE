@@ -113,21 +113,27 @@ class BuyPopup extends React.Component {
 
     gasToNas(e) {
         let gas_amount = e.target.value
-        let current_price = new BigNumber(this.state.current_price)
-        let wei = (current_price.multipliedBy(2).plus(K.multipliedBy(gas_amount))).multipliedBy(gas_amount).dividedBy(2)
-        let nas_amount = NasTool.fromWeiToNas(wei)
+        let nas_amount = ""
+        if (gas_amount !== "") {
+            let current_price = NasTool.fromNasToWei(new BigNumber(this.state.current_price))
+            let wei = (current_price.multipliedBy(2).plus(K.multipliedBy(gas_amount))).multipliedBy(gas_amount).dividedBy(2)
+            nas_amount = NasTool.fromWeiToNas(wei)
+        }
         this.setState({ gas_amount, nas_amount })
     }
 
     nasToGas(e) {
         let nas_amount = e.target.value
-        let price = new BigNumber(this.state.current_price)
-        let value = new BigNumber(nas_amount)
-        let wei = NasTool.fromNasToWei(value)
-        let a = K;
-        let b = (new BigNumber(price)).multipliedBy(2);
-        let c = (new BigNumber(0)).minus(wei.multipliedBy(2));
-        let gas_amount = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        let gas_amount = ""
+        if (nas_amount !== "") {
+            let price = NasTool.fromNasToWei(new BigNumber(this.state.current_price))
+            let value = new BigNumber(nas_amount)
+            let wei = NasTool.fromNasToWei(value)
+            let a = K;
+            let b = (new BigNumber(price)).multipliedBy(2);
+            let c = (new BigNumber(0)).minus(wei.multipliedBy(2));
+            gas_amount = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        }
         this.setState({ gas_amount, nas_amount })
     }
 
@@ -178,7 +184,7 @@ class SellPopup extends React.Component {
         this.setState({ current_price: nextProps.current_price })
     }
     SellEvent(e) {
-        var args = [document.getElementById("buy_amount").value]
+        var args = [document.getElementById("sell_gas").value]
         var option = {}
 
         window.Nasa.call(contract, "sell", args, option)
@@ -196,20 +202,26 @@ class SellPopup extends React.Component {
     }
     gasToNas(e) {
         let sell_gas = e.target.value
-        let current_price = new BigNumber(this.state.current_price)
-        let wei = (current_price.multipliedBy(2).minus(K.multipliedBy(sell_gas))).multipliedBy(sell_gas).dividedBy(2)
-        let sell_amount = NasTool.fromWeiToNas(wei)
+        let sell_amount = ""
+        if (sell_gas !== "") {
+            let current_price = NasTool.fromNasToWei(new BigNumber(this.state.current_price))
+            let wei = (current_price.multipliedBy(2).minus(K.multipliedBy(sell_gas))).multipliedBy(sell_gas).dividedBy(2)
+            sell_amount = NasTool.fromWeiToNas(wei)
+        }
         this.setState({ sell_gas, sell_amount })
     }
     nasToGas(e) {
         let sell_amount = e.target.value
-        let price = new BigNumber(this.state.current_price)
-        let value = new BigNumber(sell_amount).multipliedBy(2)
-        let wei = NasTool.fromNasToWei(value)
-        let a = K;
-        let b = (new BigNumber(0).minus(price)).multipliedBy(2);
-        let c = (new BigNumber(wei).multipliedBy(2));
-        let sell_gas = (new BigNumber(0)).minus(b).minus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        let sell_gas = ""
+        if (sell_amount !== "") {
+            let price = NasTool.fromNasToWei(new BigNumber(this.state.current_price))
+            let value = new BigNumber(sell_amount).multipliedBy(2)
+            let wei = NasTool.fromNasToWei(value)
+            let a = K;
+            let b = (new BigNumber(0).minus(price)).multipliedBy(2);
+            let c = (new BigNumber(wei).multipliedBy(2));
+            sell_gas = (new BigNumber(0)).minus(b).minus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        }
         this.setState({ sell_gas, sell_amount })
     }
     render() {
