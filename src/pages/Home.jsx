@@ -8,10 +8,11 @@ import moment from 'moment'
 import { Button, Input, Table, Modal, Avatar, Card, Col, Row, Icon } from "antd";
 import getcontract from "../api/contractbackend.js";
 import NasId from "../api/nasid";
+import contractoption from "../api/contractoption.js"
 var _ = require('lodash');
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1ygG6Tx7L8WdyW1UiSFjy6g8SVn3gh6evd';
+const contract = contractoption.lost_in_nebulas.address;
 
 // var buyList = [
 //     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
