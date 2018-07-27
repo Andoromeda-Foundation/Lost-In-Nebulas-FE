@@ -65,23 +65,29 @@ export default (contract) => new Promise((resolve, reject) => {
                     
                     console.log(tx);
                     var one = {};
-                        one.key = buylist.length + 1;
-                        one.event = func;
-                        one.player = tx.from.hash;
-                        one.price = tx.value / 10**18;
-                        let events = await new Promise((resolve,reject) => { neb.api.getEventsByHash({hash: tx.hash})
-								.then((events) => {
-                                    one.amount = JSON.parse(events.events[2].data).Transfer.amount;
-                                    one.timesecond = tx.timestamp / 1000;
-                                    one.time = new Date(one.timesecond * 1000).toLocaleString();
-                                    buylist.unshift(one);
-                                    resolve(events)
-									// startround(JSON.parse(events.events[0].data).Newround);
-								})
-								.catch((e) => {
-                                });
-                            });
-                        // one.amount = 1;
+                    one.key = buylist.length + 1;
+                    one.event = func;
+                    one.player = tx.from.hash;
+                    one.price = tx.value / 10**18;
+                    one.amount = "-";
+                    one.timesecond = tx.timestamp / 1000;
+                    one.time = new Date(one.timesecond * 1000).toLocaleString();
+                    buylist.unshift(one);
+                        
+                    let events = await new Promise((resolve, reject) => { neb.api.getEventsByHash({hash: tx.hash})
+                        .then((events) => {
+                            one.amount = JSON.parse(events.events[2].data).Transfer.amount;
+                            // one.timesecond = tx.timestamp / 1000;
+                            // one.time = new Date(one.timesecond * 1000).toLocaleString();
+                            //buylist.unshift(one);
+                            resolve(events)
+                            //console.log(events);
+                            // startround(JSON.parse(events.events[0].data).Newround);
+                        }).catch((e) => {
+                        });
+                    });
+                        
+                        
                         // let events = await neb.api.getEventsByHash({hash: tx.hash});
                         // console.log(events);
                         
@@ -130,133 +136,133 @@ export default (contract) => new Promise((resolve, reject) => {
 });
 
 
-function analyzeAccount(acc, cb) {
+// function analyzeAccount(acc, cb) {
 
-    var account = acc.address;
+//     var account = acc.address;
 
-    var page = 1;
-    var fetchUrl = netbegin + `api/tx?a=${account}&p=${page}`
-
-
-    superagent.get(fetchUrl).end((err, res) => {
-
-        var totalPage = 0;
-        var txArr = [];
-        var arr = _.fill(Array(totalPage), 1);
-        var index = 0;
-
-        async.eachSeries(arr, (acc, callback) => {
-
-            index++;
-            var url = netbegin + `api/tx?a=${account}&p=${index}`
-
-            // console.log(url)
-            superagent.get(url).end((err, res) => {
-
-                var txnList = res.body.data.txnList;
-
-                _.each(txnList, (tx) => {
-                    txArr.push(tx)
-                })
-
-                setTimeout(function () {
-                    callback(err);
-                }, 100);
-
-            });
-
-        }, (err) => {
-
-            var address = [];
-            var arrs = [];
-
-            var totalIn = 0;
-            var totalOut = 0;
-
-            var inCount = 0;
-            var outCount = 0;
-
-            _.each(txArr, function (tx) {
-
-                if (tx.type == 'binary') {
-                    var _value = tx.value / 10 ** 18;
-                    var from = tx.from.hash;
-                    var to = tx.to.hash;
-                    if (account == from) {
-                        // logger.error("out:", _value)
-                        totalOut += _value;
-                        outCount++;
-                    }
-
-                    if (account == to) {
-                        // logger.error("in:", _value)
-                        totalIn += _value;
-                        inCount++;
-                    }
-                }
+//     var page = 1;
+//     var fetchUrl = netbegin + `api/tx?a=${account}&p=${page}`
 
 
-                if (address.indexOf(tx.from.hash) == -1) {
-                    address.push(tx.from.hash);
-                    arrs.push(tx)
-                }
+//     superagent.get(fetchUrl).end((err, res) => {
 
-                if (address.indexOf(tx.to.hash) == -1) {
-                    address.push(tx.to.hash);
-                    arrs.push(tx)
-                }
+//         var totalPage = 0;
+//         var txArr = [];
+//         var arr = _.fill(Array(totalPage), 1);
+//         var index = 0;
 
-            })
+//         async.eachSeries(arr, (acc, callback) => {
 
-            // console.log("账户", account, "余额:", acc.balance, "交易记录", txArr.length, "去重", arrs.length, "totalOut", totalOut, "totalIn", totalIn, "inCount", inCount, "outCount", outCount);
+//             index++;
+//             var url = netbegin + `api/tx?a=${account}&p=${index}`
 
-            cb();
+//             // console.log(url)
+//             superagent.get(url).end((err, res) => {
 
-        })
+//                 var txnList = res.body.data.txnList;
 
-    });
+//                 _.each(txnList, (tx) => {
+//                     txArr.push(tx)
+//                 })
 
-}
+//                 setTimeout(function () {
+//                     callback(err);
+//                 }, 100);
 
-function fetchAccountInfo(accounts) {
+//             });
 
-    // console.log("------------调用该合约的所有账户三维--------------")
+//         }, (err) => {
 
-    var totalNas = 0;
+//             var address = [];
+//             var arrs = [];
 
-    var accountInfoArr = [];
+//             var totalIn = 0;
+//             var totalOut = 0;
 
-    async.eachSeries(accounts, (acc, callback) => {
+//             var inCount = 0;
+//             var outCount = 0;
 
-        var page = 1;
-        var fetchUrl = netbegin + `api/address/${acc.address}`
+//             _.each(txArr, function (tx) {
 
-        superagent.get(fetchUrl).end((err, res) => {
-            // console.log(res.body.data)
-            var address = res.body.data.address;
-            acc.txCnt = res.body.data.txCnt;
+//                 if (tx.type == 'binary') {
+//                     var _value = tx.value / 10 ** 18;
+//                     var from = tx.from.hash;
+//                     var to = tx.to.hash;
+//                     if (account == from) {
+//                         // logger.error("out:", _value)
+//                         totalOut += _value;
+//                         outCount++;
+//                     }
 
-            try {
-                acc.bls = address.balance / 10 ** 18;
-            } catch (e) {
-                // console.log("mmm");
-                // console.log(res.body);
-                acc.bls = 0;
-            }
-            totalNas += acc.bls;
+//                     if (account == to) {
+//                         // logger.error("in:", _value)
+//                         totalIn += _value;
+//                         inCount++;
+//                     }
+//                 }
 
-            // analyzeAccount(acc, function () {
-            //     callback()
-            // });
 
-        });
+//                 if (address.indexOf(tx.from.hash) == -1) {
+//                     address.push(tx.from.hash);
+//                     arrs.push(tx)
+//                 }
 
-    }, (err) => {
-        // console.log();
-        // console.log("合约", contract, "去重后账户地址", accounts.length, "总资金", totalNas);
+//                 if (address.indexOf(tx.to.hash) == -1) {
+//                     address.push(tx.to.hash);
+//                     arrs.push(tx)
+//                 }
 
-    })
-}
+//             })
+
+//             // console.log("账户", account, "余额:", acc.balance, "交易记录", txArr.length, "去重", arrs.length, "totalOut", totalOut, "totalIn", totalIn, "inCount", inCount, "outCount", outCount);
+
+//             cb();
+
+//         })
+
+//     });
+
+// }
+
+// function fetchAccountInfo(accounts) {
+
+//     // console.log("------------调用该合约的所有账户三维--------------")
+
+//     var totalNas = 0;
+
+//     var accountInfoArr = [];
+
+//     async.eachSeries(accounts, (acc, callback) => {
+
+//         var page = 1;
+//         var fetchUrl = netbegin + `api/address/${acc.address}`
+
+//         superagent.get(fetchUrl).end((err, res) => {
+//             // console.log(res.body.data)
+//             var address = res.body.data.address;
+//             acc.txCnt = res.body.data.txCnt;
+
+//             try {
+//                 acc.bls = address.balance / 10 ** 18;
+//             } catch (e) {
+//                 // console.log("mmm");
+//                 // console.log(res.body);
+//                 acc.bls = 0;
+//             }
+//             totalNas += acc.bls;
+
+//             // analyzeAccount(acc, function () {
+//             //     callback()
+//             // });
+
+//         });
+
+//     }, (err) => {
+//         // console.log();
+//         // console.log("合约", contract, "去重后账户地址", accounts.length, "总资金", totalNas);
+
+//     })
+// }
 
 
 
