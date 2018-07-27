@@ -86,7 +86,7 @@ class BuyPopup extends React.Component {
         this.nasToGas = this.nasToGas.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({current_price: nextProps.current_price})
+        this.setState({ current_price: nextProps.current_price })
     }
     // async componentDidMount(){
     //     const supply = await window.Nasa.query(contract, "totalSupply", [])
@@ -95,7 +95,7 @@ class BuyPopup extends React.Component {
     BuyEvent(e) {
         var args = []
         var option = {
-            "value": this.state.nas_amount
+            "value": document.getElementById("buy_amount").value
         }
         window.Nasa.call(contract, "buy", args, option)
             .then((payId) => {
@@ -110,6 +110,7 @@ class BuyPopup extends React.Component {
                 alert(msg)
             })
     }
+
     gasToNas(e) {
         let gas_amount = e.target.value
         let current_price = new BigNumber(this.state.current_price)
@@ -136,8 +137,7 @@ class BuyPopup extends React.Component {
                 title={this.props.text}
                 visible={this.props.visible}
                 onOk={this.BuyEvent}
-                onCancel={this.props.close_popup}
-            >
+                onCancel={this.props.close_popup}>
                 <div style={lableStyle}>Nas:</div>
                 <Input
                     {...this.props}
@@ -147,10 +147,14 @@ class BuyPopup extends React.Component {
                     value={this.state.nas_amount}
                     onChange={this.nasToGas}
                 />
-                <div style={lableStyle}>
-                    Gas:
-                    </div>
-                <Input id="gas" placeholder="Input a amount in gas" onChange={this.gasToNas} maxLength="25" value={this.state.gas_amount} />
+                <div style={lableStyle}>Gas:</div>
+                <Input
+                    id="gas"
+                    placeholder="Input a amount in gas"
+                    onChange={this.gasToNas}
+                    maxLength="25"
+                    value={this.state.gas_amount}
+                />
             </Modal>
         );
     }
@@ -171,10 +175,10 @@ class SellPopup extends React.Component {
         this.nasToGas = this.nasToGas.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({current_price: nextProps.current_price})
+        this.setState({ current_price: nextProps.current_price })
     }
     SellEvent(e) {
-        var args = [this.state.sell_amount]
+        var args = [document.getElementById("buy_amount").value]
         var option = {}
 
         window.Nasa.call(contract, "sell", args, option)
@@ -214,8 +218,7 @@ class SellPopup extends React.Component {
                 title={this.props.text}
                 visible={this.props.visible}
                 onOk={this.SellEvent}
-                onCancel={this.props.close_popup}
-            >
+                onCancel={this.props.close_popup}>
                 <div style={lableStyle}>Nas:</div>
                 <Input
                     {...this.props}
