@@ -28,7 +28,7 @@ export default async function fetchAccountDetail(address) {
         return null;
     }
     const result = await call({ from: address, functionName: 'get' });
-    if (typeof result === 'object') {
+    if (typeof result === 'string') {
         return JSON.parse(result);
     } else {
         return {}

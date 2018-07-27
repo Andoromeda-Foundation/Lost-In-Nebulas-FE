@@ -63,7 +63,7 @@ export default (contract) => new Promise((resolve, reject) => {
 
                     var func = JSON.parse(tx.data).Function;
                     
-                    console.log(tx);
+                    // console.log(tx);
                     var one = {};
                     one.key = buylist.length + 1;
                     one.event = func;
