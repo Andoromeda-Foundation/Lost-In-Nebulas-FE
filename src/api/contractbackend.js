@@ -44,7 +44,7 @@ export default (contract) => new Promise((resolve, reject) => {
 
                 var txnList = [];
                 try{
-                    txnList = res.body.data.txnList;
+                    txnList = res.body.data.txnList
                 }catch(e){
 
                 }

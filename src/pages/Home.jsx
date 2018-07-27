@@ -357,8 +357,10 @@ class Home extends React.Component {
                 NasId(one.player).then(resp => {
                     let avatar = {}
                     avatar.player = one.player
-                    avatar.src = resp.avatar
-                    avatar.nickname = resp.nickname
+                    if (resp != undefined) {
+                        avatar.src = resp.avatar
+                        avatar.nickname = resp.nickname
+                    }
                     nasidlist.push(avatar)
                     var buyList = this.state.buyList
                     buyList[index].nickname = avatar.nickname;
@@ -536,7 +538,12 @@ class Home extends React.Component {
                         游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。
                     <div>gas 燃料价格等于: basePrice + k x supply</div>
                     </div>
-                    <Table dataSource={buyList} columns={columns} style={{ background: `white` }} />
+                    <Table 
+                        dataSource={buyList} 
+                        columns={columns}                     
+                        sortField="time"
+                        sortOrder="descend"                    
+                       style={{ background: `white` }} />
                 </div>
             </div>
         );
