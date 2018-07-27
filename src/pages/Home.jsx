@@ -5,13 +5,14 @@ import "nasa.js";
 // import styles from './timing.less';
 import { NasTool } from "../api/tool";
 import moment from 'moment'
-import { Button, Input, Table, Modal, Avatar, Card, Col, Row, Icon } from "antd";
+import { Button, Input, Table, Modal, Avatar, Card, Col, Row } from "antd";
 import getcontract from "../api/contractbackend.js";
 import NasId from "../api/nasid";
+import contractoption from "../api/contractoption.js"
 var _ = require('lodash');
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1ygG6Tx7L8WdyW1UiSFjy6g8SVn3gh6evd';
+const contract = contractoption.lost_in_nebulas.address;
 
 // var buyList = [
 //     { key: "1", player: "猴子", amount: "100", price: "20", time: "2018/7/24 下午10:32:45" },
@@ -24,36 +25,10 @@ const bannerStyle = {
     background: `url(${backgroundImg})`, backgroundSize: 'cover'
 }
 
-const popupStyle = {
-    position: `fixed`,
-    width: "100%",
-    height: "70%",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1
-}
-
-const popupInnerStyle = {
-    position: 'absolute',
-    left: '25%',
-    right: '25%',
-    top: '25%',
-    bottom: '25%',
-    margin: 'auto',
-    background: `white`
-}
-
 const buttonStyle = {
     margin: "0.5rem"
 }
 
-const headerStyle = {
-    background: '#FFA940',
-    height: '15%',
-    color: '#fff'
-}
 const lableStyle = {
     marginLeft: "0.5rem",
     color: "#000",
@@ -66,9 +41,6 @@ const timingStyle = {
 
 const colStyle = {
     padding: '0 10px'
-}
-const priceStyle = {
-    fontSize: '1rem'
 }
 const K = new BigNumber(NasTool.fromNasToWei(0.000000001).toString())
 
@@ -106,10 +78,15 @@ class BuyPopup extends React.Component {
             gas: null,
             nas: null,
             supply: null,
+            nas_amount: null,
+            gas_amount: null,
             current_price: this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
+    }
+    componentWillReceiveProps(nextProps) {
+        this.setState({ current_price: nextProps.current_price })
     }
     // async componentDidMount(){
     //     const supply = await window.Nasa.query(contract, "totalSupply", [])
@@ -133,44 +110,51 @@ class BuyPopup extends React.Component {
                 alert(msg)
             })
     }
+
     gasToNas(e) {
+        let gas_amount = e.target.value
         let current_price = new BigNumber(this.state.current_price)
-        let wei = (current_price.multipliedBy(2).plus(K.multipliedBy(e.target.value))).multipliedBy(e.target.value).dividedBy(2)
-        let nas = NasTool.fromWeiToNas(wei)
-        document.getElementById("buy_amount").value = nas;
+        let wei = (current_price.multipliedBy(2).plus(K.multipliedBy(gas_amount))).multipliedBy(gas_amount).dividedBy(2)
+        let nas_amount = NasTool.fromWeiToNas(wei)
+        this.setState({ gas_amount, nas_amount })
     }
 
     nasToGas(e) {
+        let nas_amount = e.target.value
         let price = new BigNumber(this.state.current_price)
-        let value = new BigNumber(e.target.value)
+        let value = new BigNumber(nas_amount)
         let wei = NasTool.fromNasToWei(value)
         let a = K;
         let b = (new BigNumber(price)).multipliedBy(2);
         let c = (new BigNumber(0)).minus(wei.multipliedBy(2));
-        let x = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
-        document.getElementById("gas").value = x;
+        let gas_amount = (new BigNumber(0)).minus(b).plus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        this.setState({ gas_amount, nas_amount })
     }
-    
+
     render() {
         return (
             <Modal
                 title={this.props.text}
                 visible={this.props.visible}
                 onOk={this.BuyEvent}
-                onCancel={this.props.close_popup}
-            >
+                onCancel={this.props.close_popup}>
                 <div style={lableStyle}>Nas:</div>
                 <Input
                     {...this.props}
                     id="buy_amount"
                     placeholder="Input a amount in NAS"
                     maxLength="25"
-                    onKeyUp={this.nasToGas}
+                    value={this.state.nas_amount}
+                    onChange={this.nasToGas}
                 />
-                <div style={lableStyle}>
-                    Gas:
-                    </div>
-                <Input id="gas" placeholder="Input a amount in gas" onKeyUp={this.gasToNas} maxLength="25" />
+                <div style={lableStyle}>Gas:</div>
+                <Input
+                    id="gas"
+                    placeholder="Input a amount in gas"
+                    onChange={this.gasToNas}
+                    maxLength="25"
+                    value={this.state.gas_amount}
+                />
             </Modal>
         );
     }
@@ -183,14 +167,18 @@ class SellPopup extends React.Component {
             gas: null,
             nas: null,
             supply: null,
-            basicPrice: '0.000001',
+            sell_amount: null,
+            sell_gas: null,
             current_price: this.props.current_price
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
     }
+    componentWillReceiveProps(nextProps) {
+        this.setState({ current_price: nextProps.current_price })
+    }
     SellEvent(e) {
-        var args = [document.getElementById("sell_amount").value]
+        var args = [document.getElementById("buy_amount").value]
         var option = {}
 
         window.Nasa.call(contract, "sell", args, option)
@@ -207,20 +195,22 @@ class SellPopup extends React.Component {
             })
     }
     gasToNas(e) {
+        let sell_gas = e.target.value
         let current_price = new BigNumber(this.state.current_price)
-        let wei = (current_price.multipliedBy(2).minus(K.multipliedBy(e.target.value))).multipliedBy(e.target.value).dividedBy(2)
-        let nas = NasTool.fromWeiToNas(wei)
-        document.getElementById("sell_amount").value = nas.dividedBy(2);
+        let wei = (current_price.multipliedBy(2).minus(K.multipliedBy(sell_gas))).multipliedBy(sell_gas).dividedBy(2)
+        let sell_amount = NasTool.fromWeiToNas(wei)
+        this.setState({ sell_gas, sell_amount })
     }
     nasToGas(e) {
+        let sell_amount = e.target.value
         let price = new BigNumber(this.state.current_price)
-        let value = new BigNumber(e.target.value).multipliedBy(2)
+        let value = new BigNumber(sell_amount).multipliedBy(2)
         let wei = NasTool.fromNasToWei(value)
         let a = K;
         let b = (new BigNumber(0).minus(price)).multipliedBy(2);
         let c = (new BigNumber(wei).multipliedBy(2));
-        let x = (new BigNumber(0)).minus(b).minus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
-        document.getElementById("sell_gas").value = x;
+        let sell_gas = (new BigNumber(0)).minus(b).minus(Math.floor(Math.sqrt(b.multipliedBy(b).minus(a.multipliedBy(c).multipliedBy(4))))).dividedBy((a.multipliedBy(2)));
+        this.setState({ sell_gas, sell_amount })
     }
     render() {
         return (
@@ -228,20 +218,25 @@ class SellPopup extends React.Component {
                 title={this.props.text}
                 visible={this.props.visible}
                 onOk={this.SellEvent}
-                onCancel={this.props.close_popup}
-            >
-                <div style={lableStyle}>NAS:</div>
+                onCancel={this.props.close_popup}>
+                <div style={lableStyle}>Nas:</div>
                 <Input
                     {...this.props}
                     id="sell_amount"
                     placeholder="Input a amount in Token"
                     maxLength="25"
-                    onKeyUp={this.nasToGas}
+                    onChange={this.nasToGas}
+                    value={this.state.sell_amount}
                 />
                 <div style={lableStyle}>
                     Gas:
                     </div>
-                <Input id="sell_gas" onKeyUp={this.gasToNas} placeholder="Input a amount in gas" maxLength="25" />
+                <Input
+                    id="sell_gas"
+                    onChange={this.gasToNas}
+                    value={this.state.sell_gas}
+                    placeholder="Input a amount in gas"
+                    maxLength="25" />
             </Modal>
         );
     }
@@ -329,9 +324,9 @@ class Home extends React.Component {
     async fetchPriceAndBalance() {
         const price = await window.Nasa.query(contract, "getPrice", [])
         const claim_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getProfitPool", [])).toString()
-        const bonus_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getBonusPool" , [])).toString()
-        const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit" , [])
-        const my_claim_balance_b = await window.Nasa.query(contract, "getClaimedProfit" , [])
+        const bonus_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getBonusPool", [])).toString()
+        const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit", [])
+        const my_claim_balance_b = await window.Nasa.query(contract, "getClaimedProfit", [])
         const my_claim_balance = my_claim_balance_a - my_claim_balance_b;
         const current_price = NasTool.fromWeiToNas(price).toString()
         const current_balance = claim_balance

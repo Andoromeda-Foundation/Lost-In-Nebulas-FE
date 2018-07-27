@@ -84,22 +84,8 @@ export default (contract) => new Promise((resolve, reject) => {
             });
 
         }, (err) => {
-
-            var address = [];
-            var arrs = [];
-
-            _.each(txArr, function (tx) {
-                if (address.indexOf(tx.address) === -1) {
-                    address.push(tx.address);
-                    arrs.push(tx)
-                }
-            })
             
             resolve(buylist);
-
-            arrs = arrs.sort((a, b) => {
-                return b.balance - a.balance;
-            });
 
         })
         

@@ -9,6 +9,10 @@ import axios from "axios";
 import NasId from "../api/nasid";
 import BrandLight from "../Brand-Light1.svg";
 import BrandDark from "../Brand-Dark1.svg";
+import contractoption from "../api/contractoption.js"
+
+const contract = contractoption.lost_in_nebulas.address;
+
 const { Header } = Layout;
 const { SubMenu } = Menu
 
@@ -159,7 +163,11 @@ class HeaderComponent extends Component {
                         {
                             account &&
                             <Menu.Item style={{ float: 'right' }}>
-                                <Tooltip placement="bottom" title={`钱包地址 ${account}`}>
+                                <Tooltip placement="bottom" title={
+                                    <div>
+                                    <div>钱包地址 ${account}</div>
+                                    <div>水晶数量</div>
+                                    </div>}>
                                     <Avatar size="large"
                                         {...avatar} />
                                     <span> {balance} NAS</span>
