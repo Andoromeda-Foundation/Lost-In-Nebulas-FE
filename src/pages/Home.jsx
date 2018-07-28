@@ -89,6 +89,7 @@ class BuyPopup extends React.Component {
     }
     componentWillReceiveProps(nextProps) {
         this.setState({ current_price: nextProps.current_price })
+        this.setState({ my_token: nextProps.player_balance})
     }
     // async componentDidMount(){
     //     const supply = await window.Nasa.query(contract, "totalSupply", [])
@@ -334,7 +335,9 @@ class Home extends React.Component {
             // 用户分红信息
             player_available_share: null,
             player_claimed_share: null,
-            player_total_share: null
+            player_total_share: null,
+            // 当前总供给
+            total_supply: null
         };
     }
 
@@ -358,8 +361,11 @@ class Home extends React.Component {
         const player_claimed_share = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getClaimedProfit", [account])).toString()
         // 用户得到的总分红数量
         const player_total_share = new BigNumber(player_available_share).plus(player_claimed_share).toString()
+        
+        // 当前总卖出的token
+        const total_supply = (await window.Nasa.query(contract, "totalSupply", [])).toString()
 
-        return { current_price, bonus_balance, share_balance, player_balance, player_available_share, player_claimed_share, player_total_share }
+        return { current_price, bonus_balance, share_balance, player_balance, player_available_share, player_claimed_share, player_total_share, total_supply }
     }
 
     async getList() {
@@ -420,7 +426,8 @@ class Home extends React.Component {
             player_balance,
             player_available_share,
             player_claimed_share,
-            player_total_share
+            player_total_share,
+            total_supply
         } = await this.fetchPriceAndBalance()
         const buyList = await this.getList()
         this.setState({
@@ -430,7 +437,8 @@ class Home extends React.Component {
             player_balance,
             player_available_share,
             player_claimed_share,
-            player_total_share
+            player_total_share,
+            total_supply
         })
         this.setState({ buyList })
         this.getnasid(buyList);
@@ -458,6 +466,7 @@ class Home extends React.Component {
             player_available_share,
             player_claimed_share,
             player_total_share,
+            total_supply,
             buyList
         } = this.state
         const columns = [{
@@ -560,7 +569,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.my_token")}
                                 </div>
                                 <div className="custom-card">
-                                    {my_token?(my_token.substr(0,my_token.length>15?15:my_token.length)):0}NAS
+                                    {player_balance?(player_balance.substr(0,player_balance.length>15?15:player_balance.length)):0}Gas
                                 </div>
                             </Card>
                         </Col>
@@ -570,7 +579,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.totalSupply")}
                                 </div>
                                 <div className="custom-card">
-                                    {totalSupply?(totalSupply.substr(0,totalSupply.length>15?15:totalSupply.length)):0}NAS
+                                    {total_supply?(total_supply.substr(0,total_supply.length>15?15:total_supply.length)):0}Gas
                                 </div>
                             </Card>
                         </Col>
