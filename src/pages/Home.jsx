@@ -206,7 +206,7 @@ class SellPopup extends React.Component {
         if (sell_gas !== "") {
             let current_price = NasTool.fromNasToWei(new BigNumber(this.state.current_price))
             let wei = (current_price.multipliedBy(2).minus(K.multipliedBy(sell_gas))).multipliedBy(sell_gas).dividedBy(2)
-            sell_amount = NasTool.fromWeiToNas(wei)
+            sell_amount = NasTool.fromWeiToNas(wei.dividedBy(2))
         }
         this.setState({ sell_gas, sell_amount })
     }
@@ -324,25 +324,40 @@ class Home extends React.Component {
         super();
         this.state = {
             showPopup: false,
-            current_balance: null,
-            claim_balance: null,
-            bonus_balance: null,
-            my_claim_balance: null,
-            current_price: null,
-            buyList: null
+            buyList: null,
+            current_price: null, // 当前合约代币价格
+            bonus_balance: null, // 大奖奖池
+            share_balance: null, // 总分红池
+            player_balance: null, // 用户持有的代币数量
+            // 用户分红信息
+            player_available_share: null,
+            player_claimed_share: null,
+            player_total_share: null
         };
     }
 
     async fetchPriceAndBalance() {
-        const price = await window.Nasa.query(contract, "getPrice", [])
-        const claim_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getProfitPool", [])).toString()
+        const { account } = this.props
+        // 价格
+        const current_price = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getPrice", [])).toString()
+
+        // 合约池信息
+        // 最终大奖奖池
         const bonus_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getBonusPool", [])).toString()
-        const my_claim_balance_a = await window.Nasa.query(contract, "getMyProfit", [])
-        const my_claim_balance_b = await window.Nasa.query(contract, "getClaimedProfit", [])
-        const my_claim_balance = my_claim_balance_a - my_claim_balance_b;
-        const current_price = NasTool.fromWeiToNas(price).toString()
-        const current_balance = claim_balance
-        return { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance }
+        // 分红池
+        const share_balance = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getProfitPool", [])).toString()
+
+        // 玩家信息
+        // 玩家token持有量
+        const player_balance = (await window.Nasa.query(contract, "balanceOf", [account])).toString()
+        // 等待领取的分红数量 
+        const player_available_share = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getAvailableShare", [account])).toString()
+        // 已经领取的分红数量
+        const player_claimed_share = NasTool.fromWeiToNas(await window.Nasa.query(contract, "getClaimedProfit", [account])).toString()
+        // 用户得到的总分红数量
+        const player_total_share = new BigNumber(player_available_share).plus(player_claimed_share).toString()
+
+        return { current_price, bonus_balance, share_balance, player_balance, player_available_share, player_claimed_share, player_total_share }
     }
 
     async getList() {
@@ -377,7 +392,7 @@ class Home extends React.Component {
                     buyList[index].avatar = avatar.src;
                     this.setState({ buyList })
                     resolve();
-                }).catch(e => {}) // avoid page crash
+                }).catch(e => { }) // avoid page crash
             })
         })
     }
@@ -394,9 +409,25 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        const { current_price, current_balance, claim_balance, bonus_balance, my_claim_balance } = await this.fetchPriceAndBalance();
-        this.setState({ current_price, current_balance, claim_balance, bonus_balance, my_claim_balance })
-        const buyList = await this.getList();
+        const {
+            current_price,
+            bonus_balance,
+            share_balance,
+            player_balance,
+            player_available_share,
+            player_claimed_share,
+            player_total_share
+        } = await this.fetchPriceAndBalance()
+        const buyList = await this.getList()
+        this.setState({
+            current_price,
+            bonus_balance,
+            share_balance,
+            player_balance,
+            player_available_share,
+            player_claimed_share,
+            player_total_share
+        })
         this.setState({ buyList })
         this.getnasid(buyList);
     }
@@ -415,7 +446,16 @@ class Home extends React.Component {
 
     render() {
         const { account } = this.props
-        const { current_balance, current_price, claim_balance, bonus_balance, my_claim_balance, buyList } = this.state
+        const {
+            current_price,
+            bonus_balance,
+            share_balance,
+            player_balance,
+            player_available_share,
+            player_claimed_share,
+            player_total_share,
+            buyList
+        } = this.state
         const columns = [{
             title: intl.get("history.player"),
             dataIndex: 'player',
@@ -459,10 +499,10 @@ class Home extends React.Component {
                         <Col span="5" style={colStyle}>
                             <Card bordered={false}>
                                 <div className="custom-image" style={{ marginBottom: '5px' }}>
-                                    {intl.get("homepage.contract_balance")}
+                                    {intl.get("homepage.player_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {current_balance} NAS
+                                    {player_balance} Gas
                                     </div>
                             </Card>
                         </Col>
@@ -472,7 +512,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.contract_claim_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {claim_balance} NAS
+                                    {share_balance} NAS
                                     </div>
                             </Card>
                         </Col>
@@ -492,7 +532,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.my_claim_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {my_claim_balance} NAS
+                                    {player_available_share}({player_total_share}) NAS
                                     </div>
                             </Card>
                         </Col>

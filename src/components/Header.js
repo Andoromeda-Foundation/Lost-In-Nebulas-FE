@@ -170,8 +170,7 @@ class HeaderComponent extends Component {
                             <Menu.Item style={{ float: 'right' }}>
                                 <Tooltip placement="bottom" title={
                                     <div>
-                                    <div>钱包地址 ${account}</div>
-                                    <div>水晶数量</div>
+                                    <div>钱包地址 $ {account}</div>
                                     </div>}>
                                     <Avatar size="large"
                                         {...avatar} />
