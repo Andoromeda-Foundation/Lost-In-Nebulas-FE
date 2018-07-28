@@ -514,27 +514,32 @@ class Home extends React.Component {
                                     </div>
                             </Card>
                         </Col>
-                        <Col span="4" style={colStyle}>
+
+                    </Row>
+                    <div style={{paddingTop:'10px'}}>
+                    <Row>
+                        <Col span="12" style={colStyle}>
                             <Card bordered={false}>
                                 <div className="custom-image" style={{ marginBottom: '5px' }}>
                                     {intl.get("homepage.my_token")}
                                 </div>
                                 <div className="custom-card">
                                     {my_token?(my_token.substr(0,my_token.length>15?15:my_token.length)):0}NAS
-                                    </div>
+                                </div>
                             </Card>
-                        </Col>      
-                        <Col span="4" style={colStyle}>
+                        </Col>
+                        <Col span="12" style={colStyle}>
                             <Card bordered={false}>
                                 <div className="custom-image" style={{ marginBottom: '5px' }}>
                                     {intl.get("homepage.totalSupply")}
                                 </div>
                                 <div className="custom-card">
                                     {totalSupply?(totalSupply.substr(0,totalSupply.length>15?15:totalSupply.length)):0}NAS
-                                    </div>
+                                </div>
                             </Card>
-                        </Col>                                               
+                        </Col>
                     </Row>
+                    </div>
                     {/*  <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
                     <div> {intl.get("homepage.contract_claim_balance")}: {claim_balance} NAS</div>
                     <div> {intl.get("homepage.contract_bonus_balance")}: {bonus_balance} NAS</div>
