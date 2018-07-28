@@ -80,7 +80,9 @@ class BuyPopup extends React.Component {
             supply: null,
             nas_amount: null,
             gas_amount: null,
-            current_price: this.props.current_price
+            current_price: this.props.current_price,
+            totalSupply: null,
+            my_token: null
         }
         this.gasToNas = this.gasToNas.bind(this);
         this.nasToGas = this.nasToGas.bind(this);
@@ -384,8 +386,10 @@ class Home extends React.Component {
                 NasId(one.player).then(resp => {
                     let avatar = {}
                     avatar.player = one.player
-                    avatar.src = resp.avatar
-                    avatar.nickname = resp.nickname
+                    if (resp != undefined) {
+                        avatar.src = resp.avatar
+                        avatar.nickname = resp.nickname
+                    }
                     nasidlist.push(avatar)
                     var buyList = this.state.buyList
                     buyList[index].nickname = avatar.nickname;
@@ -488,7 +492,7 @@ class Home extends React.Component {
             title: intl.get("history.time"),
             dataIndex: 'time',
             key: 'time',
-            defaultSortOrder: 'descend',
+            sortOrder: 'descend',
             sorter: (a, b) => parseInt(a.timesecond, 10) - parseInt(b.timesecond, 10),
         }];
 
@@ -502,7 +506,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.player_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {player_balance} Gas
+                                    {player_balance?(player_balance.substr(0,player_balance.length>15?15:player_balance.length)):0} Gas
                                     </div>
                             </Card>
                         </Col>
@@ -512,7 +516,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.contract_claim_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {share_balance} NAS
+                                    {share_balance?(share_balance.substr(0,share_balance.length>15?15:share_balance.length)):0} NAS
                                     </div>
                             </Card>
                         </Col>
@@ -522,7 +526,7 @@ class Home extends React.Component {
                                     {intl.get("homepage.contract_bonus_balance")}
                                 </div>
                                 <div className="custom-card">
-                                    {bonus_balance} NAS
+                                    {bonus_balance?(bonus_balance.substr(0,bonus_balance.length>15?15:bonus_balance.length)):0} NAS
                                     </div>
                             </Card>
                         </Col>
@@ -542,11 +546,36 @@ class Home extends React.Component {
                                     {intl.get("homepage.current_price")}
                                 </div>
                                 <div className="custom-card">
-                                    {current_price} NAS
+                                    {current_price?(current_price.substr(0,current_price.length>15?15:current_price.length)):0}NAS
                                     </div>
                             </Card>
                         </Col>
+
                     </Row>
+                    <div style={{paddingTop:'10px'}}>
+                    <Row>
+                        <Col span="12" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.my_token")}
+                                </div>
+                                <div className="custom-card">
+                                    {my_token?(my_token.substr(0,my_token.length>15?15:my_token.length)):0}NAS
+                                </div>
+                            </Card>
+                        </Col>
+                        <Col span="12" style={colStyle}>
+                            <Card bordered={false}>
+                                <div className="custom-image" style={{ marginBottom: '5px' }}>
+                                    {intl.get("homepage.totalSupply")}
+                                </div>
+                                <div className="custom-card">
+                                    {totalSupply?(totalSupply.substr(0,totalSupply.length>15?15:totalSupply.length)):0}NAS
+                                </div>
+                            </Card>
+                        </Col>
+                    </Row>
+                    </div>
                     {/*  <div> {intl.get("homepage.contract_balance")}: {current_balance} NAS</div>
                     <div> {intl.get("homepage.contract_claim_balance")}: {claim_balance} NAS</div>
                     <div> {intl.get("homepage.contract_bonus_balance")}: {bonus_balance} NAS</div>
@@ -588,7 +617,12 @@ class Home extends React.Component {
                         游戏规则：每购买至少 1 单位 gas 燃料，反抗军就可以再多周旋 24 小时。宝藏的价值也会增加。
                     <div>gas 燃料价格等于: basePrice + k x supply</div>
                     </div>
-                    <Table dataSource={buyList} columns={columns} style={{ background: `white` }} />
+                    <Table 
+                        dataSource={buyList} 
+                        columns={columns}                     
+                        sortField="time"
+                        sortOrder="descend"                    
+                       style={{ background: `white` }} />
                 </div>
             </div>
         );

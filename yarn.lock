@@ -5311,7 +5311,7 @@ natural-compare@^1.4.0:
 
 nebulas@^0.5.5:
   version "0.5.5"
-  resolved "http://registry.npm.taobao.org/nebulas/download/nebulas-0.5.5.tgz#a94908d4cafa7038bf1d95a9da85d0466a07f3e9"
+  resolved "https://registry.yarnpkg.com/nebulas/-/nebulas-0.5.5.tgz#a94908d4cafa7038bf1d95a9da85d0466a07f3e9"
   dependencies:
     axios "^0.18.0"
     bignumber.js "^5.0.0"
