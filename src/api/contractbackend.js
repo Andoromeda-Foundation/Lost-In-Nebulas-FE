@@ -49,6 +49,10 @@ export default (contract) => new Promise((resolve, reject) => {
 
                 }
                 _.each(txnList, async (tx) => {
+
+                    console.log(tx);
+                    if(tx.status === "1") return;
+
                     var _tx = {
                         address: tx.from.hash,
                         balance: tx.from.balance / 10 ** 18
