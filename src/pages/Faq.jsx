@@ -3,8 +3,8 @@ import React from "react";
 // import intl from "react-intl-universal";
 
 const backgroundImg = 'https://i.loli.net/2018/07/16/5b4c4a832a920.jpg'
-const contract = 'n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi'
-const contractAddr = 'https://explorer.nebulas.io/#/testnet/address/n1vhZgBFYt7AE6nP3VFap9c67VPqn1eFoTi'
+const contract = 'n1eKeGdfQHsZNgrZmQgYxFVYWs2r3NKjYoF'
+const contractAddr = 'https://explorer.nebulas.io/#/testnet/address/n1eKeGdfQHsZNgrZmQgYxFVYWs2r3NKjYoF'
 
 const bannerStyle = {
     padding: `6rem`,
